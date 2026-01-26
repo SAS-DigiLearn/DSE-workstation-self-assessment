@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Include jsPDF library for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ErgoBot - Ergonomics Self-Check</title>
+
+  <!-- =======================
+       STYLES
+       Handles page layout, colors, and chat appearance
+  ========================== -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+
+    /* Chat container box */
+    #chatbox {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* First welcome message styling */
+    .welcome {
+      background-color: #b91e71;
+      color: #fff;
+      text-align: left;
+    }
+
+    /* Shared message box styles */
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+
+    /* Bot messages */
+    .bot {
+      background-color: #FCE8F2;
+      text-align: left;
+      margin-right: 10%;
+    }
+
+    /* User messages */
+    .user {
+      background-color: #e9ecef;
+      text-align: center;
+      margin-left: 50%;
+    }
+
+    /* Button layout and appearance */
+    .buttons {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    button {
+      padding: 8px 15px;
+      margin: 5px;
+      background-color: #b91e71;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Tip image display */
+    .tip-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    /* Form fields */
+    input, textarea {
+      width: 98%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    /* Animated "typing..." indicator */
+    .typing {
+      font-style: italic;
+      color: gray;
+      margin: 5px;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =======================
+       USER INFO FORM (initial screen)
+       Collects user's name, site, job, desk number before starting chat
+  ========================== -->
+  <div id="userInfoForm" style="max-width:600px;margin:auto;background:white;padding:15px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);margin-bottom:20px;">
+    <h3 style="color:#b91e71;">Before we begin</h3>
+    <p>Please fill out your details:</p>
+
+    <!-- Input fields with accessibility labels -->
+    <input id="Name" placeholder="Your name" aria-label="Your full name" required>
+    <input id="baseSite" placeholder="Base/site" aria-label="Your base or work site" required>
+    <input id="Job title" placeholder="Job title" aria-label="Your job title" required>
+    <input id="deskNumber" placeholder="Desk number (if applicable)" aria-label="Your desk number if applicable">
+
+    <button onclick="startAssessment()">Start Self-Check</button>
+  </div>
+
+  <!-- =======================
+       MAIN CHAT INTERFACE
+  ========================== -->
+  <div id="chatbox">
+   <div class="message welcome" id="welcome"></div>
+    <div id="messages"></div>
+    <div id="controls" class="buttons"></div>
+  </div>
+
+  <!-- =======================
+       JAVASCRIPT LOGIC
+       Handles the chatbot logic, flow, and PDF generation
+  ========================== -->
+  <script>
+    const messages = document.getElementById('messages');
+    const controls = document.getElementById('controls');
+    const welcomeMessage = document.getElementById('welcome');
+    document.getElementById('chatbox').style.display = 'none';
+
+    function formatHTMLtoText(html) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+      const listItems = tempDiv.querySelectorAll("li");
+      listItems.forEach(li => {
+        li.textContent = `• ${li.textContent}`;
+      });
+      tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+      return tempDiv.textContent || tempDiv.innerText || "";
+    }
+
+    const questions = [
+      {
+        text: "Can you find a comfortable keying position? ...",
+        tip: "Try pushing the display screen further back ...",
+        image: "Elbow ergo1.png"
+      },
+      {
+        text: "Do you have good keyboard technique? ...",
+        tip: "<i>Need to write some suitable advice here.</i>",
+      },
+      {
+        text: "Are the characters on your keyboard clear and readable?",
+        tip: "Clean your keyboard using wipes...",
+        followUp: { text: "Do you need a new keyboard?", field: "newKeyboard" }
+      },
+      {
+        text: "Is the mouse you use suitable for the tasks you do?",
+        tip: "Different shapes and sizes of mouse are available...",
+        followUp: { text: "Do you need a different mouse or alternative device?", field: "newMouse or alt device" }
+      },
+      {
+        text: "Do you hold the mouse close to the keyboard ...",
+        tip: "Adjust the way that you hold the mouse...",
+        image: "Mouse hold.png"
+      },
+      {
+        text: "Can you find a comfortable working position while using the mouse?",
+        tip: "Mouse mats with built in wrist supports are available..."
+      },
+      {
+        text: "Does the mouse work smoothly at a speed that suits you?",
+        tip: "Clean the mouse...",
+        followUp: { text: "Do you require a replacement mouse?", field: "newMouse" }
+      },
+      {
+        text: "Placeholder for next question",
+        tip: "Placeholder for first stage help",
+        extraTip: "Placeholder for second stage help",
+      },
+    ];
+
+    const positiveFeedback = [
+      "Great job!",
+      "Nice work keeping things ergonomic!",
+      "Awesome! Keep it up!",
+      "You're doing well, keep going!",
+      "I am in awe!"
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = [];
+    let userInfo = {};
+
+    async function showTyping(text = "", speed = 40) {
+      const typing = document.createElement('div');
+      typing.className = 'message bot typing';
+      typing.innerText = "ErgoBot is typing...";
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+      const delay = Math.min(3000, Math.max(400, text.length * speed));
+      return new Promise(resolve => {
+        setTimeout(() => {
+          typing.remove();
+          resolve();
+        }, delay);
+      });
+    }
+
+    function appendMessage(text, sender, image = null) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + sender;
+      msg.innerHTML = text;
+      messages.appendChild(msg);
+      if (image) {
+        const img = document.createElement('img');
+        img.src = image;
+        img.alt = "Ergonomics Tip Image";
+        img.className = "tip-image";
+        messages.appendChild(img);
+      }
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    /* ================
+       ONLY CHANGE IS HERE
+       ================ */
+    function startAssessment() {
+      const nameField = document.getElementById('Name');
+      const baseField = document.getElementById('baseSite');
+      const jobField = document.getElementById('Job title');
+      const deskField = document.getElementById('deskNumber');
+
+      userInfo = {
+        name: nameField.value.trim(),
+        base: baseField.value.trim(),
+        job: jobField.value.trim(),
+        desk: deskField.value.trim()
+      };
+
+      [nameField, baseField, jobField].forEach(f => f.style.borderColor = '#ccc');
+      let missing = [];
+      if (!userInfo.name) missing.push(nameField);
+      if (!userInfo.base) missing.push(baseField);
+      if (!userInfo.job) missing.push(jobField);
+
+      if (missing.length > 0) {
+        missing.forEach(f => f.style.borderColor = 'red');
+        alert("⚠️ Please fill in all required fields before starting.");
+        return;
+      }
+
+      document.getElementById('userInfoForm').style.display = 'none';
+      document.getElementById('chatbox').style.display = 'block';
+
+      /* DYNAMIC GREETING */
+      welcomeMessage.innerHTML =
+        `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.`;
+
+      showQuestion();
+    }
+
+    async function showQuestion() {
+      messages.innerHTML = '';
+      controls.innerHTML = '';
+      if (currentQuestion < questions.length) {
+        const q = questions[currentQuestion];
+        await showTyping();
+        appendMessage(q.text, 'bot', q.image);
+        controls.innerHTML = `
+          <button onclick="handleAnswer(true)">Yes</button>
+          <button onclick="handleAnswer(false)">No</button>
+        `;
+      } else {
+        showSummary();
+      }
+    }
+
+    async function handleAnswer(isYes) {
+      const q = questions[currentQuestion];
+      controls.innerHTML = '';
+      appendMessage(isYes ? "Yes" : "No", 'user');
+
+      if (isYes) {
+        userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
+        await showTyping();
+        const feedback = positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
+        appendMessage(feedback, 'bot');
+        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      } else {
+        await showTyping();
+        appendMessage(q.tip, 'bot');
+        await showTyping();
+        appendMessage("Did this help solve the issue?", 'bot');
+        controls.innerHTML = `
+          <button onclick="handleTipHelp(true)">Yes</button>
+          <button onclick="handleTipHelp(false)">No</button>
+        `;
+      }
+    }
+
+    async function handleTipHelp(helped) {
+      const q = questions[currentQuestion];
+      controls.innerHTML = '';
+      appendMessage(helped ? "Yes" : "No", 'user');
+
+      if (helped) {
+        await showTyping();
+        appendMessage("Great! Glad that helped.", 'bot');
+        userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.tip, image: q.image, issue: null });
+        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      } else {
+        if (q.extraTip) {
+          await showTyping();
+          appendMessage("Let's try one more thing:", 'bot');
+          await showTyping();
+          appendMessage(q.extraTip, 'bot');
+          await showTyping();
+          appendMessage("Did this help?", 'bot');
+          controls.innerHTML = `
+            <button onclick="handleExtraTipHelp(true)">Yes</button>
+            <button onclick="handleExtraTipHelp(false)">No</button>
+          `;
+        } else {
+          await askFollowUp(q);
+        }
+      }
+    }
+
+    async function handleExtraTipHelp(helped) {
+      const q = questions[currentQuestion];
+      controls.innerHTML = '';
+      appendMessage(helped ? "Yes" : "No", 'user');
+
+      if (helped) {
+        await showTyping();
+        appendMessage("Fantastic! Glad that worked.", 'bot');
+        userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.extraTip, image: q.image, issue: null });
+        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      } else {
+        await askFollowUp(q);
+      }
+    }
+
+    async function askFollowUp(q) {
+      if (!q.followUp) {
+        await askForIssue(q);
+        return;
+      }
+      await showTyping();
+      appendMessage(q.followUp.text, 'bot');
+      controls.innerHTML = `
+        <button onclick="handleFollowUpAnswer(true)">Yes</button>
+        <button onclick="handleFollowUpAnswer(false)">No</button>
+      `;
+    }
+
+    async function handleFollowUpAnswer(needsNewItem) {
+      const q = questions[currentQuestion];
+      appendMessage(needsNewItem ? "Yes" : "No", 'user');
+      controls.innerHTML = '';
+      await showTyping();
+
+      if (needsNewItem) {
+        appendMessage("Okay, this will be noted in your report so a replacement can be arranged.", 'bot');
+        userAnswers.push({
+          question: q.text,
+          answer: "No (unresolved)",
+          tip: q.extraTip || q.tip,
+          image: q.image,
+          issue: `User indicated they need a new ${q.followUp.field.replace('new', '').toLowerCase()}.`
+        });
+        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      } else {
+        appendMessage("Got it, we'll just note that no replacement is needed.", 'bot');
+        await showTyping();
+        await askForIssue(q);
+      }
+    }
+
+    async function askForIssue(q) {
+      await showTyping();
+      appendMessage("Please describe the issue so we can follow up:", 'bot');
+      const textarea = document.createElement('textarea');
+      textarea.placeholder = "Type here...";
+      textarea.rows = 3;
+      controls.appendChild(textarea);
+      const submitBtn = document.createElement('button');
+      submitBtn.textContent = "Submit Issue";
+
+      submitBtn.onclick = async () => {
+        const issueText = textarea.value.trim();
+        if (!issueText) {
+          alert("Please enter a brief description before continuing.");
+          return;
+        }
+        appendMessage(issueText, 'user');
+        await showTyping();
+        appendMessage("Thanks for sharing, your description will be included in your report.", 'bot');
+        userAnswers.push({
+          question: q.text,
+          answer: "No (unresolved)",
+          tip: q.extraTip || q.tip,
+          image: q.image,
+          issue: issueText
+        });
+        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      };
+
+      controls.appendChild(submitBtn);
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      showQuestion();
+    }
+
+    async function showSummary() {
+      messages.innerHTML = '';
+      welcomeMessage.innerHTML = "Well done on completing the self-check!";
+      await showTyping();
+      appendMessage("Here's a summary of your responses:", 'bot');
+
+      userAnswers.forEach(entry => {
+        appendMessage(entry.question, 'bot');
+        appendMessage(entry.answer, 'user');
+        if (entry.tip) appendMessage(entry.tip, 'bot');
+        if (entry.issue) appendMessage("User note: " + entry.issue, 'user');
+      });
+
+      controls.innerHTML = `
+        <button onclick="downloadPDF()">Download Your Summary</button>
+      `;
+    }
+
+    function addPageHeader(doc, userInfo, margin = 20) {
+      const pageWidth = doc.internal.pageSize.getWidth();
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      const headerText = userInfo?.name ? `ErgoBot Self-Check for ${userInfo.name}` : `ErgoBot Self-Check`;
+      doc.text(headerText, margin, 12);
+      doc.line(margin, 14, pageWidth - margin, 14);
+    }
+
+    function addTextBlock(doc, textLines, margin, y, lineHeight = 6) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const footerReserve = 18;
+      const availableHeight = pageHeight - footerReserve;
+
+      for (let i = 0; i < textLines.length; i++) {
+        if (y + lineHeight > availableHeight) {
+          doc.addPage();
+          addPageHeader(doc, userInfo, margin);
+          y = 25;
+        }
+        doc.text(textLines[i], margin, y);
+        y += lineHeight;
+      }
+      return y;
+    }
+
+    function addFooterToAllPages(doc, margin = 20) {
+      const pageCount = doc.internal.getNumberOfPages();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      for (let p = 1; p <= pageCount; p++) {
+        doc.setPage(p);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(120, 120, 120);
+        doc.text("Generated by ErgoBot", margin, pageHeight - 8);
+        doc.text(`Page ${p} of ${pageCount}`, pageWidth - margin, pageHeight - 8, { align: "right" });
+      }
+    }
+
+    function setTextColorTracked(doc, r, g, b) {
+      doc.setTextColor(r, g, b);
+      doc.__currentColor = [r, g, b];
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ compress: true });
+      doc.setProperties({
+        title: `ErgoBot Self-Check - ${userInfo.name || ""}`,
+        author: userInfo.name || "ErgoBot"
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      const maxWidth = pageWidth - margin * 2;
+      let y = 25;
+      const lineHeight = 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(185, 30, 113);
+      doc.text("ErgoBot Self-Check Summary", margin, y);
+      y += 8;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      const details = [
+        `Name: ${userInfo.name || ""}`,
+        `Base: ${userInfo.base || ""}`,
+        `Job title: ${userInfo.job || ""}`,
+        `Desk: ${userInfo.desk || ""}`
+      ];
+      details.forEach(line => {
+        const lines = doc.splitTextToSize(line, maxWidth);
+        y = addTextBlock(doc, lines, margin, y, lineHeight);
+      });
+
+      y += 4;
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 8;
+
+      if (!userAnswers || userAnswers.length === 0) {
+        const noResp = doc.splitTextToSize("No responses were recorded during this session.", maxWidth);
+        y = addTextBlock(doc, noResp, margin, y, lineHeight);
+      } else {
+        userAnswers.forEach((entry, idx) => {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(14);
+          setTextColorTracked(doc, 0, 0, 0);
+          const questionText = `${idx + 1}. ${formatHTMLtoText(entry.question)}`;
+          const qLines = doc.splitTextToSize(questionText, maxWidth);
+          y = addTextBlock(doc, qLines, margin, y, lineHeight);
+          y += 2;
+
+          doc.setFontSize(12);
+          setTextColorTracked(doc, 185, 30, 113);
+          const answerText = `Answer: ${entry.answer || ""}`;
+          const aLines = doc.splitTextToSize(answerText, maxWidth - 10);
+          y = addTextBlock(doc, aLines, margin + 5, y, lineHeight);
+          y += 2;
+
+          if (entry.issue) {
+            doc.setFontSize(10);
+            setTextColorTracked(doc, 0, 0, 0);
+            const issueText = `User comment: ${entry.issue}`;
+            const iLines = doc.splitTextToSize(issueText, maxWidth - 20);
+            y = addTextBlock(doc, iLines, margin + 10, y, lineHeight);
+            y += 4;
+          }
+
+          doc.line(margin, y, pageWidth - margin, y);
+          y += 10;
+        });
+      }
+
+      doc.setPage(1);
+      addPageHeader(doc, userInfo, margin);
+      addFooterToAllPages(doc, margin);
+
+      const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
+      doc.save(`ErgoBot_SelfCheck_${safeName}.pdf`);
+    }
+  </script>
+</body>
+</html>
