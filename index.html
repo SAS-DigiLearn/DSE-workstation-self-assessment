@@ -156,9 +156,10 @@
         text: "Can you find a comfortable keying position? ...",
         tip: "Try pushing the display screen further back ...",
         image: "Elbow ergo1.png"
-      },
+         yesFeedback: "Great! A comfortable keying position helps reduce strain on your shoulders and wrists."
+  },
       {
-        text: "Do you have good keyboard technique? ...",
+        text: "Are you able to tilt the keyboard to suit your preference?",
         tip: "<i>Need to write some suitable advice here.</i>",
       },
       {
@@ -293,8 +294,10 @@
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
         await showTyping();
-        const feedback = positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
-        appendMessage(feedback, 'bot');
+        const feedback =
+  q.yesFeedback ||
+  positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
+appendMessage(feedback, 'bot');
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await showTyping();
