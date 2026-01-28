@@ -294,11 +294,10 @@
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
         await showTyping();
-       const feedback =
-  q.yesFeedback ||
-  positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
-
-appendMessage(feedback, 'bot');
+      
+        const feedback =
+      q.yesFeedback ||
+      positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
 
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
