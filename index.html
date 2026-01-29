@@ -185,8 +185,6 @@
 <li>If you rest your wrists on the desk - don’t press down on them.</li>
 </ul>
 <p>Do you meet the guidance?</p>`
-,
-        tip: "Please describe the problem so we can follow up. Training may be available to help improve your technique."
   },
       /* Q5 */
       {
@@ -419,7 +417,7 @@ appendMessage(feedback, 'bot');
 
     async function askForIssue(q) {
       await showTyping();
-      appendMessage("Please describe the issue so we can follow up:", 'bot');
+      appendMessage("Please describe the problem so we can follow up:", 'bot');
       const textarea = document.createElement('textarea');
       textarea.placeholder = "Type here...";
       textarea.rows = 3;
