@@ -382,33 +382,24 @@ Keyboard shortcuts in Windows - Microsoft Support
       welcomeMessage.innerHTML =
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.`;
 
-     async function showQuestion() {
-  messages.innerHTML = '';
-  controls.innerHTML = '';
-
-  if (currentQuestion < questions.length) {
-    const q = questions[currentQuestion];
-
-    await showTyping();
-
-    // ✅ SECTION HEADER
-    if (q.section) {
-      const sectionDiv = document.createElement('div');
-      sectionDiv.className = 'section-header';
-      sectionDiv.innerText = q.section;
-      messages.appendChild(sectionDiv);
+       showQuestion();
     }
 
-    appendMessage(q.text, 'bot', q.image);
-
-    controls.innerHTML = `
-      <button onclick="handleAnswer(true)">Yes</button>
-      <button onclick="handleAnswer(false)">No</button>
-    `;
-  } else {
-    showSummary();
-  }
-}
+    async function showQuestion() {
+      messages.innerHTML = '';
+      controls.innerHTML = '';
+      if (currentQuestion < questions.length) {
+        const q = questions[currentQuestion];
+        await showTyping();
+        appendMessage(q.text, 'bot', q.image);
+        controls.innerHTML = `
+          <button onclick="handleAnswer(true)">Yes</button>
+          <button onclick="handleAnswer(false)">No</button>
+        `;
+      } else {
+        showSummary();
+      }
+    }
 
 
 
