@@ -150,7 +150,7 @@
     const controls = document.getElementById('controls');
     const welcomeMessage = document.getElementById('welcome');
     document.getElementById('chatbox').style.display = 'none';
-    let currentSection = null;
+  
 
 
 
@@ -316,6 +316,7 @@ Keyboard shortcuts in Windows - Microsoft Support
     ];
 
     let currentQuestion = 0;
+    let currentSection = null;
     let userAnswers = [];
     let userInfo = {};
 
@@ -387,33 +388,34 @@ Keyboard shortcuts in Windows - Microsoft Support
   messages.innerHTML = '';
   controls.innerHTML = '';
 
-  if (currentQuestion < questions.length) {
-    const q = questions[currentQuestion];
-
-    // 🔒 Maintain section state safely
-    if (q.section) {
-      currentSection = q.section;
-    }
-
-    await showTyping();
-
-    // ✅ Always show the current section header if we have one
-    if (currentSection) {
-      const sectionDiv = document.createElement('div');
-      sectionDiv.className = 'section-header';
-      sectionDiv.innerText = currentSection;
-      messages.appendChild(sectionDiv);
-    }
-
-    appendMessage(q.text, 'bot', q.image);
-
-    controls.innerHTML = `
-      <button onclick="handleAnswer(true)">Yes</button>
-      <button onclick="handleAnswer(false)">No</button>
-    `;
-  } else {
+  if (currentQuestion >= questions.length) {
     showSummary();
+    return;
   }
+
+  const q = questions[currentQuestion];
+
+  // ✅ Track section safely
+  if (q.section) {
+    currentSection = q.section;
+  }
+
+  await showTyping();
+
+  // ✅ Always show current section if it exists
+  if (currentSection) {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'section-header';
+    sectionDiv.innerText = currentSection;
+    messages.appendChild(sectionDiv);
+  }
+
+  appendMessage(q.text, 'bot', q.image);
+
+  controls.innerHTML = `
+    <button onclick="handleAnswer(true)">Yes</button>
+    <button onclick="handleAnswer(false)">No</button>
+  `;
 }
 
 
