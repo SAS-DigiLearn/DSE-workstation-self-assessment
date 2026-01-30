@@ -382,26 +382,23 @@ Keyboard shortcuts in Windows - Microsoft Support
       welcomeMessage.innerHTML =
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.`;
 
-      async function showQuestion() {
+     async function showQuestion() {
+  messages.innerHTML = '';
   controls.innerHTML = '';
 
   if (currentQuestion < questions.length) {
     const q = questions[currentQuestion];
 
-    // ✅ Detect section change
-    if (q.section && q.section !== currentSection) {
-      messages.innerHTML = ''; // clear only when section changes
-      currentSection = q.section;
+    await showTyping();
 
-      await showTyping();
-
+    // ✅ SECTION HEADER
+    if (q.section) {
       const sectionDiv = document.createElement('div');
       sectionDiv.className = 'section-header';
       sectionDiv.innerText = q.section;
       messages.appendChild(sectionDiv);
     }
 
-    await showTyping();
     appendMessage(q.text, 'bot', q.image);
 
     controls.innerHTML = `
@@ -412,6 +409,7 @@ Keyboard shortcuts in Windows - Microsoft Support
     showSummary();
   }
 }
+
 
 
     async function handleAnswer(isYes) {
