@@ -97,6 +97,17 @@
       animation: blink 1.5s infinite;
     }
 
+    /* ⛔ Question section headers ⛔ */
+    .section-header {
+  margin: 15px 0 10px;
+  padding: 10px;
+  background-color: #f1f3f5;
+  border-left: 5px solid #b91e71;
+  font-weight: bold;
+  color: #333;
+}
+
+
     @keyframes blink {
       50% { opacity: 0.3; }
     }
@@ -156,6 +167,7 @@
     const questions = [
        /* Q1 */
       {
+        section: "Section 1: Keyboards",
         text: "Question 1: Do you use equipment that combines the screen and keyboard? For instance: you use a laptop without connecting it to a separate screen, or you use a tablet?",
         tip: "The keyboard should be separate from the screen, unless you are using your portable device for a short time only.  It’s ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard.",
         image: "Elbow ergo1.png",
@@ -375,6 +387,15 @@ Keyboard shortcuts in Windows - Microsoft Support
       if (currentQuestion < questions.length) {
         const q = questions[currentQuestion];
         await showTyping();
+
+        // ✅ SECTION HEADER
+    if (q.section) {
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'section-header';
+      sectionDiv.innerText = q.section;
+      messages.appendChild(sectionDiv);
+    }
+
         appendMessage(q.text, 'bot', q.image);
         controls.innerHTML = `
           <button onclick="handleAnswer(true)">Yes</button>
