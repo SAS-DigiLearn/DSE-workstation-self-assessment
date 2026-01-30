@@ -156,27 +156,27 @@
     const questions = [
        /* Q1 */
       {
-        text: "Do you use equipment that combines the screen and keyboard? For instance: you use a laptop without connecting it to a separate screen, or you use a tablet?",
+        text: "Question 1: Do you use equipment that combines the screen and keyboard? For instance: you use a laptop without connecting it to a separate screen, or you use a tablet?",
         tip: "The keyboard should be separate from the screen, unless you are using your portable device for a short time only.  It’s ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard.",
         image: "Elbow ergo1.png",
         yesFeedback: "Great but remember, the keyboard should be separate from the screen, unless you are using your portable device for a short time only.  It’s ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard."
   },
        /* Q2 */
       {
-        text: "Are you able to tilt the keyboard to suit your preference?",
+        text: "Question 2: Are you able to tilt the keyboard to suit your preference?",
         tip: "Keyboard tilt is a matter of personal preference. Raise the feet under the keyboard to tilt up, or, fold the feet down to use the keyboard flat on the desk.",
       yesFeedback: "Great! A comfortable keying position helps reduce strain on your shoulders and wrists."
   },
        /* Q3 */
       {
-        text: "Can you find a comfortable keying position? As shown in the first image, you should sit upright and have room to rest your palms or wrists on the desk for support when you are not typing.",
+        text: "Question 3: Can you find a comfortable keying position? As shown in the first image, you should sit upright and have room to rest your palms or wrists on the desk for support when you are not typing.",
         tip: "Try pushing the screen further back to create more room for the keyboard, hands and wrist. Move the keyboard to allow room to rest your palms or wrists on the desk for support when you are not typing. You might like to use a wrist-rest. Remember to sit upright. You might need to adjust your chair position to help.",
         image: "Mouse hold.png",
         followUp: { text: "Do you need a new keyboard?", field: "newKeyboard" },
   },
       /* Q4 */
       {
-        text: `Do you have good keyboard technique?
+        text: `Question 4: Do you have good keyboard technique?
           <p>In order to have a good keyboard technique you should meet this guidance: </p>
 <ul>
 <li>Position your wrists so they are in line with your forearms. Your wrists should not bend up or down</li>
@@ -189,13 +189,13 @@
   },
       /* Q5 */
       {
-        text: "Are the characters on your keyboard clear and readable?",
+        text: "Question 5: Are the characters on your keyboard clear and readable?",
         tip: "Clean the keyboard with wipes – these are provided in SAS offices. You could try tilting your keyboard differently to avoid glare. If the characters still can’t be read, or the keys have become shiny through wear, then your keyboard may need replacing.",
      yesFeedback: "Great! Remember to keep your keyboard clean – wipes are provided in SAS offices."
   },
       /* Q6 */
       {
-        text: "Is the mouse suitable for the tasks you do?",
+        text: "Question 6: Is the mouse suitable for the tasks you do?",
         tip: `Different shapes and sizes of mouse are available. Or, an alternative device such as a tablet may suit your task. You can also use keyboard commands rather than a mouse. Using even a few keyboard commands cuts down on mouse use and is beneficial. You can learn about keyboard commands at <a href="https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec" target="_blank" rel="noopener noreferrer">
 Keyboard shortcuts in Windows - Microsoft Support
 </a>.`,
@@ -203,7 +203,7 @@ Keyboard shortcuts in Windows - Microsoft Support
   },
       /* Q7 */
       {
-        text: `Do you hold the mouse close to the keyboard?
+        text: `Question 7: Do you hold the mouse close to the keyboard?
          <p>As shown in the first image you should:</p>
 <ul>
 <li>Position the mouse close to the keyboard</li>
@@ -221,11 +221,21 @@ Keyboard shortcuts in Windows - Microsoft Support
   },
         /* Q8 */
       {
-        text: "When you are using the mouse, is there enough support for your wrist and forearm?",
+        text: "Question 8: When you are using the mouse, is there enough support for your wrist and forearm?",
         tip: "You should be able to position the mouse comfortably. Use the desk surface or your chair’s armrest for support. If these aren’t suitable, a separate support device may help. Mouse mats with built-in wrist supports are available.",
       yesFeedback: "Great! You should be able to position the mouse comfortably. Use the desk surface or your chair’s armrest for support. If these aren’t suitable, a separate support device may help. Mouse mats with built-in wrist supports are available."
   },
       /* Q9 */
+      {
+        text: "Question 9: Does the mouse work smoothly at a speed that suits you?",
+        tip: `<ul>
+<li>Clean the desk surface</li>
+<li>A light operated mouse collects dust on the feet and in the light recess. Clean the feet and light recess</li>
+<li>You can adjust the speed and sensitivity of the mouse in your computer settings</li>
+</ul>`,
+      yesFeedback: "Great! Remember a light-operated mouse can accumulate dust on its feet and in the light recess. Performance may vary depending on the desk surface, keep the desk surface clean. You can adjust the speed and sensitivity of your mouse in your computer settings."
+  },
+       /* Q10 */
       {
         text: "Placeholder for next question",
         tip: "Placeholder for first stage help",
@@ -233,6 +243,14 @@ Keyboard shortcuts in Windows - Microsoft Support
         followUp: { text: "Do you want to request a different type of mouse or request an alternative device?", field: "newMouse" },
       yesFeedback: "Great! A comfortable keying position helps reduce strain on your shoulders and wrists."
   }
+       /* Q11 */
+      {
+        text: "Placeholder for next question",
+        tip: "Placeholder for first stage help",
+        extraTip: "Placeholder for second stage help",
+        followUp: { text: "Do you want to request a different type of mouse or request an alternative device?", field: "newMouse" },
+      yesFeedback: "Great! A comfortable keying position helps reduce strain on your shoulders and wrists."
+  },
     ];
 
     const positiveFeedback = [
