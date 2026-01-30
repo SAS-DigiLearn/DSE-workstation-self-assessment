@@ -150,6 +150,8 @@
     const controls = document.getElementById('controls');
     const welcomeMessage = document.getElementById('welcome');
     document.getElementById('chatbox').style.display = 'none';
+    let currentSection = null;
+
 
     function formatHTMLtoText(html) {
       const tempDiv = document.createElement("div");
@@ -380,33 +382,37 @@ Keyboard shortcuts in Windows - Microsoft Support
       welcomeMessage.innerHTML =
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.`;
 
-      showQuestion();
-    }
+      async function showQuestion() {
+  controls.innerHTML = '';
 
-    async function showQuestion() {
-      messages.innerHTML = '';
-      controls.innerHTML = '';
-      if (currentQuestion < questions.length) {
-        const q = questions[currentQuestion];
-        await showTyping();
+  if (currentQuestion < questions.length) {
+    const q = questions[currentQuestion];
 
-        // ✅ SECTION HEADER
-    if (q.section) {
+    // ✅ Detect section change
+    if (q.section && q.section !== currentSection) {
+      messages.innerHTML = ''; // clear only when section changes
+      currentSection = q.section;
+
+      await showTyping();
+
       const sectionDiv = document.createElement('div');
       sectionDiv.className = 'section-header';
       sectionDiv.innerText = q.section;
       messages.appendChild(sectionDiv);
     }
 
-        appendMessage(q.text, 'bot', q.image);
-        controls.innerHTML = `
-          <button onclick="handleAnswer(true)">Yes</button>
-          <button onclick="handleAnswer(false)">No</button>
-        `;
-      } else {
-        showSummary();
-      }
-    }
+    await showTyping();
+    appendMessage(q.text, 'bot', q.image);
+
+    controls.innerHTML = `
+      <button onclick="handleAnswer(true)">Yes</button>
+      <button onclick="handleAnswer(false)">No</button>
+    `;
+  } else {
+    showSummary();
+  }
+}
+
 
     async function handleAnswer(isYes) {
       const q = questions[currentQuestion];
