@@ -335,10 +335,10 @@ Make any necessary adjustments before continuing.
         /*✅✏️ Q18 */
       {
         section: "Section 4: Other equipment",
-        text: "Question 18: Do you have a headset?",
-        tip: "A headset can be useful when you are on Teams calls or you are answering calls via the computer.",
+        text: "Question 18: Do you use a computer headset?",
+        tip: "A headset can be useful when you’re on Teams calls or taking calls through your computer. If you have a headset available, try using it on your next call.",
         followUp: { text: "Do you want to request a headset?", field: "newHeadset" },
-      yesFeedback: "Great! A headset can be useful when you on Teams calls."
+      yesFeedback: "Great! Using a headset can improve comfort and sound quality during Teams or computer calls."
   },
         /*✅✏️ Q19 */
       {
@@ -553,7 +553,7 @@ appendMessage(feedback, 'bot');
       await showTyping();
 
       if (needsNewItem) {
-        appendMessage("Okay, this will be noted in your report so a replacement can be arranged.", 'bot');
+        appendMessage("Okay, this will be noted in your report.", 'bot');
         userAnswers.push({
           question: q.text,
           answer: "No (unresolved)",
