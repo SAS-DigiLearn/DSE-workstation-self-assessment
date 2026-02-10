@@ -539,29 +539,36 @@ Make any necessary adjustments before continuing.
     }
 
     async function showQuestion() {
-      messages.innerHTML = '';
-      controls.innerHTML = '';
-      if (currentQuestion < questions.length) {
-        const q = questions[currentQuestion];
-        await showTyping();
+  messages.innerHTML = '';
+  controls.innerHTML = '';
 
-         // ✅ SECTION HEADER
+  if (currentQuestion < questions.length) {
+    const q = questions[currentQuestion];
+    await showTyping();
+
+    // Track section
     if (q.section) {
+      currentSection = q.section;
+    }
+
+    // Always display section header
+    if (currentSection) {
       const sectionDiv = document.createElement('div');
       sectionDiv.className = 'section-header';
-      sectionDiv.innerText = q.section;
+      sectionDiv.innerText = currentSection;
       messages.appendChild(sectionDiv);
     }
 
-        appendMessage(q.text, 'bot', q.image);
-        controls.innerHTML = `
-          <button onclick="handleAnswer(true)">Yes</button>
-          <button onclick="handleAnswer(false)">No</button>
-        `;
-      } else {
-        showSummary();
-      }
-    }
+    appendMessage(q.text, 'bot', q.image);
+
+    controls.innerHTML = `
+      <button onclick="handleAnswer(true)">Yes</button>
+      <button onclick="handleAnswer(false)">No</button>
+    `;
+  } else {
+    showSummary();
+  }
+}
 
 
 
