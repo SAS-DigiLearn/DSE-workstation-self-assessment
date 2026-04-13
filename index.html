@@ -573,6 +573,8 @@ Make any necessary adjustments before continuing.
   messages.innerHTML = '';
   controls.innerHTML = '';
 
+  updateProgress(); 
+
   if (currentQuestion < questions.length) {
     const q = questions[currentQuestion];
     await showTyping();
@@ -604,7 +606,7 @@ Make any necessary adjustments before continuing.
 
 
     async function handleAnswer(isYes) {
-      updateProgress(); 
+      
       const q = questions[currentQuestion];
       controls.innerHTML = '';
       appendMessage(isYes ? "Yes" : "No", 'user');
