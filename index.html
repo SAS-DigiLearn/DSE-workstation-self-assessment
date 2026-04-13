@@ -809,16 +809,15 @@ appendMessage(feedback, 'bot');
       }
     }
 
-    function updateProgress() {
+  function updateProgress() {
   const total = questions.length;
- const current = currentQuestion + 1;
+  const current = currentQuestion + 1;
+
 
   const percent = Math.round((current / total) * 100);
-
   document.getElementById('progressBar').style.width = percent + "%";
-  document.getElementById('progressText').innerText = percent + "% complete";
+  document.getElementById('progressText').innerText = `Question ${current} of ${total}`;
 }
-
     function setTextColorTracked(doc, r, g, b) {
       doc.setTextColor(r, g, b);
       doc.__currentColor = [r, g, b];
