@@ -108,6 +108,31 @@
   color: #333;
 }
 
+/* ⛔ Progress bar container ⛔ */
+#progressContainer {
+  width: 100%;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* ⛔ Progress bar fill ⛔ */
+#progressBar {
+  height: 10px;
+  width: 0%;
+  background-color: #b91e71;
+  transition: width 0.4s ease;
+}
+
+/* ⛔ Progress text ⛔ */
+#progressText {
+  text-align: right;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
 
     @keyframes blink {
       50% { opacity: 0.3; }
@@ -137,6 +162,10 @@
     ⛔ MAIN CHAT INTERFACE ⛔
   ========================== -->
   <div id="chatbox">
+    <div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
+<div id="progressText">0% complete</div>
    <div class="message welcome" id="welcome"></div>
     <div id="messages"></div>
     <div id="controls" class="buttons"></div>
@@ -539,6 +568,8 @@ Make any necessary adjustments before continuing.
     }
 
     async function showQuestion() {
+  updateProgress(); 
+
   messages.innerHTML = '';
   controls.innerHTML = '';
 
@@ -715,6 +746,9 @@ appendMessage(feedback, 'bot');
     }
 
     async function showSummary() {
+
+      document.getElementById('progressBar').style.width = "100%";
+      document.getElementById('progressText').innerText = "100% complete";
       messages.innerHTML = '';
       welcomeMessage.innerHTML = "Well done on completing the self-check!";
       await showTyping();
@@ -773,6 +807,16 @@ appendMessage(feedback, 'bot');
         doc.text(`Page ${p} of ${pageCount}`, pageWidth - margin, pageHeight - 8, { align: "right" });
       }
     }
+
+    function updateProgress() {
+  const total = questions.length;
+  const current = currentQuestion;
+
+  const percent = Math.round((current / total) * 100);
+
+  document.getElementById('progressBar').style.width = percent + "%";
+  document.getElementById('progressText').innerText = percent + "% complete";
+}
 
     function setTextColorTracked(doc, r, g, b) {
       doc.setTextColor(r, g, b);
