@@ -591,7 +591,7 @@ Make any necessary adjustments before continuing.
     }
 
     appendMessage(q.text, 'bot', q.image);
- updateProgress(); 
+ 
     controls.innerHTML = `
       <button onclick="handleAnswer(true)">Yes</button>
       <button onclick="handleAnswer(false)">No</button>
@@ -604,6 +604,7 @@ Make any necessary adjustments before continuing.
 
 
     async function handleAnswer(isYes) {
+      updateProgress(); 
       const q = questions[currentQuestion];
       controls.innerHTML = '';
       appendMessage(isYes ? "Yes" : "No", 'user');
