@@ -137,6 +137,11 @@
     @keyframes blink {
       50% { opacity: 0.3; }
     }
+
+#welcome {
+  transition: opacity 0.3s ease;
+}
+
   </style>
 </head>
 
@@ -564,11 +569,19 @@ Make any necessary adjustments before continuing.
       welcomeMessage.innerHTML =
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. This ergonomics self‑check has 36 short questions designed to help fine‑tune your workspace.`;
 
-       showQuestion();
-    }
-
-    async function showQuestion() {
- 
+      
+      function showQuestion() {
+if (currentQuestion === 0) {
+  welcomeMessage.style.display = "block";
+  setTimeout(() => {
+    welcomeMessage.style.opacity = "1";
+  }, 10);
+} else {
+  welcomeMessage.style.opacity = "0";
+  setTimeout(() => {
+    welcomeMessage.style.display = "none";
+  }, 300); // matches CSS transition time
+}
 
   messages.innerHTML = '';
   controls.innerHTML = '';
