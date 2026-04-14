@@ -570,18 +570,20 @@ Make any necessary adjustments before continuing.
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. This ergonomics self‑check has 36 short questions designed to help fine‑tune your workspace.`;
 
       
-      function showQuestion() {
-if (currentQuestion === 0) {
-  welcomeMessage.style.display = "block";
-  setTimeout(() => {
-    welcomeMessage.style.opacity = "1";
-  }, 10);
-} else {
-  welcomeMessage.style.opacity = "0";
-  setTimeout(() => {
-    welcomeMessage.style.display = "none";
-  }, 300); // matches CSS transition time
-}
+     async function showQuestion() {
+
+  // ✅ Welcome logic (your fade version — fixed)
+  if (currentQuestion === 0) {
+    welcomeMessage.style.display = "block";
+    setTimeout(() => {
+      welcomeMessage.style.opacity = "1";
+    }, 10);
+  } else {
+    welcomeMessage.style.opacity = "0";
+    setTimeout(() => {
+      welcomeMessage.style.display = "none";
+    }, 300);
+  }
 
   messages.innerHTML = '';
   controls.innerHTML = '';
@@ -592,12 +594,10 @@ if (currentQuestion === 0) {
     const q = questions[currentQuestion];
     await showTyping();
 
-    // Track section
     if (q.section) {
       currentSection = q.section;
     }
 
-    // Always display section header
     if (currentSection) {
       const sectionDiv = document.createElement('div');
       sectionDiv.className = 'section-header';
@@ -606,7 +606,7 @@ if (currentQuestion === 0) {
     }
 
     appendMessage(q.text, 'bot', q.image);
- 
+
     controls.innerHTML = `
       <button onclick="handleAnswer(true)">Yes</button>
       <button onclick="handleAnswer(false)">No</button>
@@ -615,7 +615,6 @@ if (currentQuestion === 0) {
     showSummary();
   }
 }
-
 
 
     async function handleAnswer(isYes) {
