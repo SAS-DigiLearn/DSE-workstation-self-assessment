@@ -587,6 +587,9 @@ showWelcomeScreen();
   messages.innerHTML = '';
   controls.innerHTML = '';
 
+const header = document.getElementById("sectionHeader");
+header.style.display = "";
+
   updateProgress();
 
   if (currentQuestion < questions.length) {
@@ -763,7 +766,9 @@ function showWelcomeScreen() {
   messages.innerHTML = '';
   controls.innerHTML = '';
 
-  document.getElementById("sectionHeader").innerText = "";
+ const header = document.getElementById("sectionHeader");
+  header.style.display = "none"; 
+  
   document.getElementById("progressBar").style.width = "0%";
   document.getElementById("progressText").innerText = "";
 
