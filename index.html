@@ -166,7 +166,7 @@
     <!-- Input fields with accessibility labels -->
     <input id="Name" placeholder="Your name" aria-label="Your full name" required>
     <input id="baseSite" placeholder="Base/site" aria-label="Your base or work site" required>
-    <input id="Job title" placeholder="Job title" aria-label="Your job title" required>
+    <input id="jobTitle" placeholder="Job title" aria-label="Your job title" required>
     <input id="deskNumber" placeholder="Desk number (if applicable)" aria-label="Your desk number if applicable">
 
     <button onclick="startAssessment()">Start Self-Check</button>
@@ -549,7 +549,7 @@ Make any necessary adjustments before continuing.
     function startAssessment() {
       const nameField = document.getElementById('Name');
       const baseField = document.getElementById('baseSite');
-      const jobField = document.getElementById('Job title');
+      const jobField = document.getElementById('jobTitle');
       const deskField = document.getElementById('deskNumber');
 
       userInfo = {
