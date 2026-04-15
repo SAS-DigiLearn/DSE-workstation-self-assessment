@@ -181,6 +181,7 @@
 </div>
 <div id="progressText"></div>
    <div class="message welcome" id="welcome"></div>
+   <div id="sectionHeader" class="section-header"></div>
     <div id="messages"></div>
     <div id="controls" class="buttons"></div>
   </div>
@@ -599,12 +600,7 @@ Make any necessary adjustments before continuing.
     const q = questions[currentQuestion];
 
     
-    if (q.section) {
-      const sectionDiv = document.createElement("div");
-      sectionDiv.className = "section-header";
-      sectionDiv.innerText = q.section;
-      messages.appendChild(sectionDiv);
-    }
+   document.getElementById("sectionHeader").innerText = q.section || "";
 
     appendMessage(q.text, 'bot', q.image);
 
