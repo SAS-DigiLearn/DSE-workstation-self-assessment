@@ -778,61 +778,86 @@ function showReviewScreen() {
     const div = document.createElement('div');
     div.className = 'message bot';
     div.id = `review-${index}`;
-
-    div.innerHTML = `
-      <strong>Q${index + 1}</strong><br>
-      ${entry.question}<br>
-      <strong>Answer:</strong> ${entry.answer}<br>
-      ${entry.issue ? `<em>Note:</em> ${entry.issue}<br>` : ""}
-      <button onclick="editInline(${index})">Edit</button>
-    `;
-
     messages.appendChild(div);
+
+    renderReviewItem(index); // ✅ use renderer
   });
 
   controls.innerHTML = `
     <button onclick="showSummary()">Finish & Generate Report</button>
   `;
 }
+    
 function editInline(index) {
   const entry = userAnswers[index];
-  const q = questions[index];
   const div = document.getElementById(`review-${index}`);
-
-  div.classList.add("editing");
 
   div.innerHTML = `
     <strong>Editing Q${index + 1}</strong><br>
     ${entry.question}<br><br>
 
-    <button onclick="saveInline(${index}, true)">Yes</button>
-    <button onclick="saveInline(${index}, false)">No</button>
+    <button onclick="toggleIssueBox(${index}, false)">Yes</button>
+    <button onclick="toggleIssueBox(${index}, true)">No</button>
 
-    <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer === "No" ? "block" : "none"};">
+    <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer.startsWith("No") ? "block" : "none"};">
       <textarea id="issue-${index}" placeholder="Add or update note...">${entry.issue || ""}</textarea>
     </div>
 
     <br>
-    <button onclick="cancelInline()">Cancel</button>
+    <button onclick="saveInline(${index})">Save</button>
+    <button onclick="cancelInline(${index})">Cancel</button>
   `;
+
+  // store temp answer
+  div.dataset.answer = entry.answer.startsWith("No") ? "No" : "Yes";
 }
 
-function saveInline(index, isYes) {
+function toggleIssueBox(index, isNo) {
+  const box = document.getElementById(`issueBox-${index}`);
+  const div = document.getElementById(`review-${index}`);
+
+  if (isNo) {
+    box.style.display = "block";
+    div.dataset.answer = "No";
+  } else {
+    box.style.display = "none";
+    div.dataset.answer = "Yes";
+  }
+}
+
+function saveInline(index) {
   const q = questions[index];
+  const div = document.getElementById(`review-${index}`);
+  const answer = div.dataset.answer || "Yes";
+
   const textarea = document.getElementById(`issue-${index}`);
 
   userAnswers[index] = {
     question: q.text,
-    answer: isYes ? "Yes" : "No",
+    answer: answer,
     tip: q.tip,
-    issue: isYes ? null : (textarea ? textarea.value : null)
+    issue: answer === "No" ? (textarea ? textarea.value.trim() : "") : null
   };
 
-  showReviewScreen();
+  renderReviewItem(index); 
 }
 
-function cancelInline() {
-  showReviewScreen();
+    
+function cancelInline(index) {
+  renderReviewItem(index);
+}
+
+function renderReviewItem(index) {
+  const entry = userAnswers[index];
+  const div = document.getElementById(`review-${index}`);
+
+  div.innerHTML = `
+    <strong>Q${index + 1}</strong><br>
+    ${entry.question}<br>
+    <strong>Answer:</strong> ${entry.answer}<br>
+    ${entry.issue ? `<em>Note:</em> ${entry.issue}<br>` : ""}
+    <button onclick="editInline(${index})">Edit</button>
+  `;
 }
 
    function showSummary() {
