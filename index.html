@@ -765,18 +765,62 @@ appendMessage(feedback, 'bot');
 
       controls.appendChild(submitBtn);
     }
+    
+//New function
+function showReviewScreen() {
+  messages.innerHTML = '';
+  controls.innerHTML = '';
 
+  welcomeMessage.innerHTML = "Review your answers before finishing";
+
+  appendMessage("You can review and edit any answer below:", 'bot');
+
+  userAnswers.forEach((entry, index) => {
+    const container = document.createElement('div');
+    container.className = 'message bot';
+
+    container.innerHTML = `
+      <div><strong>Q${index + 1}</strong></div>
+      <div>${entry.question}</div>
+      <div><strong>Your answer:</strong> ${entry.answer}</div>
+      ${entry.issue ? `<div><em>Note:</em> ${entry.issue}</div>` : ""}
+      <button onclick="editQuestion(${index})">Edit</button>
+    `;
+
+    messages.appendChild(container);
+  });
+
+  controls.innerHTML = `
+    <button onclick="showSummary()">Finish & Generate Report</button>
+  `;
+}
+
+function editQuestion(index) {
+  // ✅ Reset flow to that question
+  currentQuestion = index;
+
+  // ✅ Remove all answers AFTER this point (critical for follow-up safety)
+  userAnswers = userAnswers.slice(0, index);
+
+  showQuestion();
+}
+    
     function nextQuestion() {
-      currentQuestion++;
-      showQuestion();
-    }
+  currentQuestion++;
+
+  if (currentQuestion >= questions.length) {
+    showReviewScreen(); // ✅ go to review instead of summary
+  } else {
+    showQuestion();
+  }
+}
 
     async function showSummary() {
 
       document.getElementById('progressBar').style.width = "100%";
       document.getElementById('progressText').innerText = "100% complete";
       messages.innerHTML = '';
-      welcomeMessage.innerHTML = "Well done on completing the self-check!";
+      welcomeMessage.innerHTML = "Final Summary";
       await showTyping();
       appendMessage("Here's a summary of your responses:", 'bot');
 
