@@ -598,6 +598,16 @@ Make any necessary adjustments before continuing.
   if (currentQuestion < questions.length) {
     const q = questions[currentQuestion];
 
+     if (q.section && q.section !== currentSection) {
+    currentSection = q.section;
+
+    const sectionDiv = document.createElement("div");
+    sectionDiv.className = "section-header";
+    sectionDiv.innerText = currentSection;
+
+    messages.appendChild(sectionDiv);
+  }
+
     appendMessage(q.text, 'bot', q.image);
 
     controls.innerHTML = `
