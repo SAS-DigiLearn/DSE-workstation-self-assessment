@@ -190,24 +190,27 @@
       ⛔ Handles the chatbot logic, flow, and PDF generation ⛔
   ========================== -->
   <script>
-    const messages = document.getElementById('messages');
-    const controls = document.getElementById('controls');
-    const welcomeMessage = document.getElementById('welcome');
-    document.getElementById('chatbox').style.display = 'none';
-    let currentSection = null;
+   const messages = document.getElementById('messages');
+const controls = document.getElementById('controls');
+const welcomeMessage = document.getElementById('welcome');
+document.getElementById('chatbox').style.display = 'none';
+
+let currentSection = null;
+let currentQuestion = 0;
+let userAnswers = [];
+let userInfo = {};
 
 
-
-    function formatHTMLtoText(html) {
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = html;
-      const listItems = tempDiv.querySelectorAll("li");
-      listItems.forEach(li => {
-        li.textContent = `• ${li.textContent}`;
-      });
-      tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-      return tempDiv.textContent || tempDiv.innerText || "";
-    }
+   function formatHTMLtoText(html) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  const listItems = tempDiv.querySelectorAll("li");
+  listItems.forEach(li => {
+    li.textContent = `• ${li.textContent}`;
+  });
+  tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+  return tempDiv.textContent || tempDiv.innerText || "";
+}
 
  /* ✅✏️✏️ Below sits the questions, You are welcome to touch this section of code ✏️✏️✅ */
     
@@ -510,9 +513,7 @@ Make any necessary adjustments before continuing.
       "I am in awe!"
     ];
 
-    let currentQuestion = 0;
-    let userAnswers = [];
-    let userInfo = {};
+  
 
     /* ⛔ Bot message fucntions ⛔ */
     
@@ -581,40 +582,21 @@ Make any necessary adjustments before continuing.
     }
 
       
-     async function showQuestion() {
+    async function showQuestion() {
 
-  // ✅ Welcome logic (your fade version — fixed)
   if (currentQuestion === 0) {
     welcomeMessage.style.display = "block";
-    setTimeout(() => {
-      welcomeMessage.style.opacity = "1";
-    }, 10);
   } else {
-    welcomeMessage.style.opacity = "0";
-    setTimeout(() => {
-      welcomeMessage.style.display = "none";
-    }, 300);
+    welcomeMessage.style.display = "none";
   }
 
   messages.innerHTML = '';
   controls.innerHTML = '';
 
-  updateProgress(); 
+  updateProgress();
 
   if (currentQuestion < questions.length) {
     const q = questions[currentQuestion];
-    await showTyping();
-
-    if (q.section) {
-      currentSection = q.section;
-    }
-
-    if (currentSection) {
-      const sectionDiv = document.createElement('div');
-      sectionDiv.className = 'section-header';
-      sectionDiv.innerText = currentSection;
-      messages.appendChild(sectionDiv);
-    }
 
     appendMessage(q.text, 'bot', q.image);
 
@@ -623,7 +605,19 @@ Make any necessary adjustments before continuing.
       <button onclick="handleAnswer(false)">No</button>
     `;
   } else {
-    showSummary();
+    showReviewScreen();
+  }
+}
+
+
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion >= questions.length) {
+    showReviewScreen();
+  } else {
+    showQuestion();
   }
 }
 
@@ -771,72 +765,91 @@ function showReviewScreen() {
   messages.innerHTML = '';
   controls.innerHTML = '';
 
-  welcomeMessage.innerHTML = "Review your answers before finishing";
-
-  appendMessage("You can review and edit any answer below:", 'bot');
+  appendMessage("Review your answers before finishing:", "bot");
 
   userAnswers.forEach((entry, index) => {
-    const container = document.createElement('div');
-    container.className = 'message bot';
+    const div = document.createElement('div');
+    div.className = 'message bot';
+    div.id = `review-${index}`;
 
-    container.innerHTML = `
-      <div><strong>Q${index + 1}</strong></div>
-      <div>${entry.question}</div>
-      <div><strong>Your answer:</strong> ${entry.answer}</div>
-      ${entry.issue ? `<div><em>Note:</em> ${entry.issue}</div>` : ""}
-      <button onclick="editQuestion(${index})">Edit</button>
+    div.innerHTML = `
+      <strong>Q${index + 1}</strong><br>
+      ${entry.question}<br>
+      <strong>Answer:</strong> ${entry.answer}<br>
+      ${entry.issue ? `<em>Note:</em> ${entry.issue}<br>` : ""}
+      <button onclick="editInline(${index})">Edit</button>
     `;
 
-    messages.appendChild(container);
+    messages.appendChild(div);
   });
 
   controls.innerHTML = `
     <button onclick="showSummary()">Finish & Generate Report</button>
   `;
 }
+function editInline(index) {
+  const entry = userAnswers[index];
+  const q = questions[index];
+  const div = document.getElementById(`review-${index}`);
 
-function editQuestion(index) {
-  // ✅ Reset flow to that question
-  currentQuestion = index;
+  div.classList.add("editing");
 
-  // ✅ Remove all answers AFTER this point (critical for follow-up safety)
-  userAnswers = userAnswers.slice(0, index);
+  div.innerHTML = `
+    <strong>Editing Q${index + 1}</strong><br>
+    ${entry.question}<br><br>
 
-  showQuestion();
+    <button onclick="saveInline(${index}, true)">Yes</button>
+    <button onclick="saveInline(${index}, false)">No</button>
+
+    <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer === "No" ? "block" : "none"};">
+      <textarea id="issue-${index}" placeholder="Add or update note...">${entry.issue || ""}</textarea>
+    </div>
+
+    <br>
+    <button onclick="cancelInline()">Cancel</button>
+  `;
 }
+
+function saveInline(index, isYes) {
+  const q = questions[index];
+  const textarea = document.getElementById(`issue-${index}`);
+
+  userAnswers[index] = {
+    question: q.text,
+    answer: isYes ? "Yes" : "No",
+    tip: q.tip,
+    issue: isYes ? null : (textarea ? textarea.value : null)
+  };
+
+  showReviewScreen();
+}
+
+function cancelInline() {
+  showReviewScreen();
+}
+
+   function showSummary() {
+  messages.innerHTML = '';
+  controls.innerHTML = '';
+
+  appendMessage("Final Summary", "bot");
+
+  userAnswers.forEach(a => {
+    appendMessage(a.question, "bot");
+    appendMessage(a.answer, "user");
+    if (a.issue) appendMessage("Note: " + a.issue, "user");
+  });
+
+  controls.innerHTML = `
+    <button onclick="downloadPDF()">Download PDF</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+  `;
+}
+
+
+
+
     
-    function nextQuestion() {
-  currentQuestion++;
-
-  if (currentQuestion >= questions.length) {
-    showReviewScreen(); // ✅ go to review instead of summary
-  } else {
-    showQuestion();
-  }
-}
-
-    async function showSummary() {
-
-      document.getElementById('progressBar').style.width = "100%";
-      document.getElementById('progressText').innerText = "100% complete";
-      messages.innerHTML = '';
-      welcomeMessage.innerHTML = "Final Summary";
-      await showTyping();
-      appendMessage("Here's a summary of your responses:", 'bot');
-
-      userAnswers.forEach(entry => {
-        appendMessage(entry.question, 'bot');
-        appendMessage(entry.answer, 'user');
-        if (entry.tip) appendMessage(entry.tip, 'bot');
-        if (entry.issue) appendMessage("User note: " + entry.issue, 'user');
-      });
-
-      controls.innerHTML = `
-        <button onclick="downloadPDF()">Download Your Summary</button>
-        <button onclick="downloadCSV()">Download CSV</button>
-      `;
-    }
-
     function addPageHeader(doc, userInfo, margin = 20) {
       const pageWidth = doc.internal.pageSize.getWidth();
       doc.setFont("helvetica", "normal");
