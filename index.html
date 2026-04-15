@@ -961,7 +961,7 @@ function renderReviewItem(index) {
 
   const percent = Math.round((current / total) * 100);
   document.getElementById('progressBar').style.width = percent + "%";
-  document.getElementById('progressText').innerText = `Question ${current}/of ${total}`;
+  document.getElementById('progressText').innerText = `Question ${current} of ${total}`;
 }
     function setTextColorTracked(doc, r, g, b) {
       doc.setTextColor(r, g, b);
