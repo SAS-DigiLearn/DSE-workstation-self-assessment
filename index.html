@@ -181,8 +181,7 @@
   <div id="progressBar"></div>
 </div>
 <div id="progressText"></div>
-   <div class="message welcome" id="welcome"></div>
-   <div id="sectionHeader" class="section-header"></div>
+      <div id="sectionHeader" class="section-header"></div>
     <div id="messages"></div>
     <div id="controls" class="buttons"></div>
   </div>
@@ -194,7 +193,6 @@
   <script>
    const messages = document.getElementById('messages');
 const controls = document.getElementById('controls');
-const welcomeMessage = document.getElementById('welcome');
 document.getElementById('chatbox').style.display = 'none';
 
 let currentSection = null;
@@ -580,17 +578,12 @@ Make any necessary adjustments before continuing.
       /* ⛔ DYNAMIC GREETING ⛔ */
       welcomeMessage.innerHTML =
         `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong>. This ergonomics self‑check has 36 short questions designed to help fine‑tune your workspace.`;
- showQuestion();
+showWelcomeScreen();
     }
 
       
  async function showQuestion() {
 
-  if (currentQuestion === 0) {
-    welcomeMessage.style.display = "block";
-  } else {
-    welcomeMessage.style.display = "none";
-  }
 
   messages.innerHTML = '';
   controls.innerHTML = '';
@@ -766,7 +759,31 @@ appendMessage(feedback, 'bot');
 
       controls.appendChild(submitBtn);
     }
-    
+
+function showWelcomeScreen() {
+  messages.innerHTML = '';
+  controls.innerHTML = '';
+
+  document.getElementById("sectionHeader").innerText = "";
+  document.getElementById("progressBar").style.width = "0%";
+  document.getElementById("progressText").innerText = "";
+
+  appendMessage(
+    `Hi ${userInfo.name}! I'm <strong>ErgoBot</strong> 👋<br><br>
+    This ergonomics self-check has <strong>36 short questions</strong> designed to help fine-tune your workspace.<br><br>
+    It should only take a few minutes.`,
+    "bot"
+  );
+
+  controls.innerHTML = `
+    <button onclick="beginQuestions()">Start Assessment</button>
+  `;
+}
+
+function beginQuestions() {
+  currentQuestion = 0;
+  showQuestion();
+}
 //New function
 function showReviewScreen() {
   messages.innerHTML = '';
