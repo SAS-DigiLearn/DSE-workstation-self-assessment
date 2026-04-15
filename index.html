@@ -789,6 +789,7 @@ appendMessage(feedback, 'bot');
 
       controls.innerHTML = `
         <button onclick="downloadPDF()">Download Your Summary</button>
+        <button onclick="downloadCSV()">Download CSV</button>
       `;
     }
 
@@ -920,6 +921,45 @@ appendMessage(feedback, 'bot');
         });
       }
 
+function downloadCSV() {
+  let rows = [];
+
+  // Header
+  rows.push([
+    "Name",
+    "Base",
+    "Job",
+    "Desk",
+    "Question",
+    "Answer",
+    "Issue"
+  ]);
+
+  userAnswers.forEach(entry => {
+    rows.push([
+      userInfo.name,
+      userInfo.base,
+      userInfo.job,
+      userInfo.desk,
+      formatHTMLtoText(entry.question),
+      entry.answer,
+      entry.issue || ""
+    ]);
+  });
+
+  // Convert to CSV string
+  const csvContent = rows.map(e =>
+    e.map(v => `"${(v || "").replace(/"/g, '""')}"`).join(",")
+  ).join("\n");
+
+  // Download
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `ErgoBot_${userInfo.name}.csv`;
+  link.click();
+}
+      
       doc.setPage(1);
       addPageHeader(doc, userInfo, margin);
       addFooterToAllPages(doc, margin);
