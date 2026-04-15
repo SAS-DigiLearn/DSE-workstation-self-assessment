@@ -599,8 +599,10 @@ Make any necessary adjustments before continuing.
   if (currentQuestion < questions.length) {
     const q = questions[currentQuestion];
 
-    
-   document.getElementById("sectionHeader").innerText = q.section || "";
+  let section = q.section || currentSection;
+currentSection = section;
+
+document.getElementById("sectionHeader").innerText = section || "";
 
     appendMessage(q.text, 'bot', q.image);
 
