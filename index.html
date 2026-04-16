@@ -620,15 +620,14 @@ Make any necessary adjustments before continuing.
       const jobField = document.getElementById('jobTitle');
       const deskField = document.getElementById('deskNumber');
 
-     updateState({
-  userInfo: {
-    name: nameField.value.trim(),
-    base: baseField.value.trim(),
-    job: jobField.value.trim(),
-    desk: deskField.value.trim()
-  }
-});
-
+    userInfo = {
+  name: nameField.value.trim(),
+  base: baseField.value.trim(),
+  job: jobField.value.trim(),
+  desk: deskField.value.trim()
+};
+saveProgress();
+      
       [nameField, baseField, jobField].forEach(f => f.style.borderColor = '#ccc');
       let missing = [];
       if (!userInfo.name) missing.push(nameField);
