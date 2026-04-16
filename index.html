@@ -159,6 +159,19 @@
   transition: opacity 0.3s ease;
 }
 
+#progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#restartBtn {
+  background-color: #6c757d;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
   </style>
 </head>
 
@@ -187,7 +200,10 @@
     <div id="progressContainer">
   <div id="progressBar"></div>
 </div>
-<div id="progressText"></div>
+<div id="progressHeader">
+  <button id="restartBtn" onclick="restartAssessment()">Restart</button>
+  <div id="progressText"></div>
+</div>
       <div id="sectionHeader" class="section-header"></div>
     <div id="messages"></div>
     <div id="controls" class="buttons"></div>
@@ -779,7 +795,7 @@ function showWelcomeScreen() {
   
   document.getElementById("progressBar").style.width = "0%";
   document.getElementById("progressText").innerText = "";
-
+document.getElementById("restartBtn").style.display = "none";
   appendMessage(
     `<h3 class="wel">Hi ${userInfo.name}! I'm <strong>ErgoBot</strong> 👋</h3>
     This ergonomics self-check has <strong>36 short questions</strong> designed to help fine-tune your workspace.<br><br>
@@ -797,6 +813,7 @@ function showWelcomeScreen() {
 }
 
 function beginQuestions() {
+   document.getElementById("restartBtn").style.display = "inline-block";
   currentQuestion = 0;
   showQuestion();
 }
@@ -972,7 +989,29 @@ function saveUserInfo() {
 }
 
 
+function restartAssessment() {
+  if (!confirm("Are you sure you want to restart? All progress will be lost.")) {
+    return;
+  }
 
+  // Reset all state
+  currentQuestion = 0;
+  currentSection = null;
+  userAnswers = [];
+  userInfo = {};
+
+  // Clear UI
+  messages.innerHTML = '';
+  controls.innerHTML = '';
+
+  // Reset progress
+  document.getElementById("progressBar").style.width = "0%";
+  document.getElementById("progressText").innerText = "";
+
+  // Show form again
+  document.getElementById('chatbox').style.display = 'none';
+  document.getElementById('userInfoForm').style.display = 'block';
+}
 
     
     function addPageHeader(doc, userInfo, margin = 20) {
