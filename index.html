@@ -214,33 +214,6 @@
       ⛔ Handles the chatbot logic, flow, and PDF generation ⛔
   ========================== -->
   <script>
-
-function saveProgress() {
-  const data = {
-    currentQuestion,
-    currentSection,
-    userAnswers,
-    userInfo
-  };
-
-  localStorage.setItem("ergobotProgress", JSON.stringify(data));
-}
-
-function loadProgress() {
-  const saved = localStorage.getItem("ergobotProgress");
-  if (!saved) return false;
-
-  const data = JSON.parse(saved);
-
-  currentQuestion = data.currentQuestion || 0;
-  currentSection = data.currentSection || null;
-  userAnswers = data.userAnswers || [];
-  userInfo = data.userInfo || {};
-
-  return true;
-}
-
-
    const messages = document.getElementById('messages');
 const controls = document.getElementById('controls');
 document.getElementById('chatbox').style.display = 'none';
@@ -250,22 +223,6 @@ let currentQuestion = 0;
 let userAnswers = [];
 let userInfo = {};
 
-window.addEventListener("load", () => {
-  if (loadProgress() && userInfo.name) {
-    document.getElementById('userInfoForm').style.display = 'none';
-    document.getElementById('chatbox').style.display = 'block';
-
-    if (currentQuestion >= questions.length) {
-      showReviewScreen();
-    } else {
-      showQuestion();
-    }
-  }
-});
-
-window.addEventListener("beforeunload", () => {
-  saveProgress();
-});
 
    function formatHTMLtoText(html) {
   const tempDiv = document.createElement("div");
@@ -620,14 +577,13 @@ Make any necessary adjustments before continuing.
       const jobField = document.getElementById('jobTitle');
       const deskField = document.getElementById('deskNumber');
 
-    userInfo = {
-  name: nameField.value.trim(),
-  base: baseField.value.trim(),
-  job: jobField.value.trim(),
-  desk: deskField.value.trim()
-};
-saveProgress();
-      
+      userInfo = {
+        name: nameField.value.trim(),
+        base: baseField.value.trim(),
+        job: jobField.value.trim(),
+        desk: deskField.value.trim()
+      };
+
       [nameField, baseField, jobField].forEach(f => f.style.borderColor = '#ccc');
       let missing = [];
       if (!userInfo.name) missing.push(nameField);
@@ -644,7 +600,7 @@ saveProgress();
       document.getElementById('chatbox').style.display = 'block';
 
       /* ⛔ DYNAMIC GREETING ⛔ */
-
+    
 showWelcomeScreen();
     }
 
@@ -682,8 +638,8 @@ document.getElementById("sectionHeader").innerText = section || "";
 
 
 function nextQuestion() {
-  updateState({ currentQuestion: currentQuestion + 1 });
-  
+  currentQuestion++;
+
   if (currentQuestion >= questions.length) {
     showReviewScreen();
   } else {
@@ -700,7 +656,6 @@ function nextQuestion() {
 
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
-        updateState({ userAnswers });
         await showTyping();
       
         const feedback =
@@ -729,7 +684,6 @@ appendMessage(feedback, 'bot');
         await showTyping();
         appendMessage("Great! Glad that helped.", 'bot');
         userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.tip, image: q.image, issue: null });
-        saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         if (q.extraTip) {
@@ -758,7 +712,6 @@ appendMessage(feedback, 'bot');
         await showTyping();
         appendMessage("Fantastic! Glad that worked.", 'bot');
         userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.extraTip, image: q.image, issue: null });
-       saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await askFollowUp(q);
@@ -793,7 +746,6 @@ appendMessage(feedback, 'bot');
           image: q.image,
           issue: `User indicated they need a new ${q.followUp.field.replace('new', '').toLowerCase()}.`
         });
-        saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         appendMessage("Got it, we'll just note that no replacement is needed.", 'bot');
@@ -828,7 +780,6 @@ appendMessage(feedback, 'bot');
           image: q.image,
           issue: issueText
         });
-        saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       };
 
@@ -862,16 +813,10 @@ document.getElementById("restartBtn").style.display = "none";
 }
 
 function beginQuestions() {
-  document.getElementById("restartBtn").style.display = "inline-block";
-  updateState({ currentQuestion: 0 });
+   document.getElementById("restartBtn").style.display = "inline-block";
+  currentQuestion = 0;
   showQuestion();
 }
-
-function updateState(updates = {}) {
-  Object.assign(window, updates); // update global state
-  saveProgress(); // auto-save every time
-}
-
 //New function
 function showReviewScreen() {
   messages.innerHTML = '';
@@ -956,7 +901,7 @@ function saveInline(index) {
     tip: q.tip,
     issue: answer === "No" ? (textarea ? textarea.value.trim() : "") : null
   };
-saveProgress();
+
   renderReviewItem(index); 
 }
 
@@ -1020,7 +965,7 @@ function saveUserInfo() {
   }
 
   userInfo = { name, base, job, desk };
-saveProgress();
+
   renderUserInfo();
 }
 
@@ -1048,8 +993,6 @@ function restartAssessment() {
   if (!confirm("Are you sure you want to restart? All progress will be lost.")) {
     return;
   }
-
-  localStorage.removeItem("ergobotProgress");
 
   // Reset all state
   currentQuestion = 0;
