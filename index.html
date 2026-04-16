@@ -807,6 +807,14 @@ function showReviewScreen() {
 
   appendMessage("Review your answers before finishing:", "bot");
 
+ // User detail review
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'message bot';
+  infoDiv.id = 'review-userinfo';
+  messages.appendChild(infoDiv);
+
+  renderUserInfo(); 
+  
   userAnswers.forEach((entry, index) => {
     const div = document.createElement('div');
     div.className = 'message bot';
@@ -897,6 +905,53 @@ function renderReviewItem(index) {
     <button onclick="editInline(${index})">Edit</button>
   `;
 }
+
+function editUserInfo() {
+  const div = document.getElementById('review-userinfo');
+
+  div.innerHTML = `
+    <strong>Edit Details</strong><br><br>
+
+    <input id="edit-name" value="${userInfo.name}" placeholder="Name">
+    <input id="edit-base" value="${userInfo.base}" placeholder="Base/site">
+    <input id="edit-job" value="${userInfo.job}" placeholder="Job title">
+    <input id="edit-desk" value="${userInfo.desk || ""}" placeholder="Desk number">
+
+    <br>
+    <button onclick="saveUserInfo()">Save</button>
+    <button onclick="renderUserInfo()">Cancel</button>
+  `;
+}
+
+function renderUserInfo() {
+  const div = document.getElementById('review-userinfo');
+
+  div.innerHTML = `
+    <strong>User Details</strong><br>
+    Name: ${userInfo.name}<br>
+    Base: ${userInfo.base}<br>
+    Job: ${userInfo.job}<br>
+    Desk: ${userInfo.desk || "-"}<br><br>
+    <button onclick="editUserInfo()">Edit</button>
+  `;
+}
+
+function saveUserInfo() {
+  const name = document.getElementById('edit-name').value.trim();
+  const base = document.getElementById('edit-base').value.trim();
+  const job = document.getElementById('edit-job').value.trim();
+  const desk = document.getElementById('edit-desk').value.trim();
+
+  if (!name || !base || !job) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  userInfo = { name, base, job, desk };
+
+  renderUserInfo();
+}
+
 
    function showSummary() {
   messages.innerHTML = '';
