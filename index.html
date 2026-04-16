@@ -173,6 +173,11 @@
   padding: 5px 10px;
 }
 
+#progressContainer,
+#progressHeader {
+  display: none;
+}
+
   </style>
 </head>
 
@@ -815,6 +820,8 @@ document.getElementById("restartBtn").style.display = "none";
 
 function beginQuestions() {
    document.getElementById("restartBtn").style.display = "inline-block";
+  document.getElementById("progressContainer").style.display = "block";
+  document.getElementById("progressHeader").style.display = "flex";
   currentQuestion = 0;
   showQuestion();
 }
@@ -1012,6 +1019,8 @@ function restartAssessment() {
   // Show form again
   document.getElementById('chatbox').style.display = 'none';
   document.getElementById('userInfoForm').style.display = 'block';
+  document.getElementById("progressContainer").style.display = "none";
+document.getElementById("progressHeader").style.display = "none";
 }
 
     
