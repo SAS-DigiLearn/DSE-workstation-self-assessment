@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ErgoBot - Ergonomics Self-Check</title>
+  <title>DSE workstation self-assessment</title>
 
   <!-- =======================
        STYLES
@@ -195,9 +195,9 @@
     <input id="Name" placeholder="Your name" aria-label="Your full name" required>
     <input id="baseSite" placeholder="Base/site" aria-label="Your base or work site" required>
     <input id="jobTitle" placeholder="Job title" aria-label="Your job title" required>
-    <input id="deskNumber" placeholder="Desk number (if applicable)" aria-label="Your desk number if applicable">
+    <input id="deskNumber" placeholder="Desk number (ACC and NHQ only) (if applicable)" aria-label="Your desk number if applicable">
 
-    <button onclick="startAssessment()">Start Self-Check</button>
+    <button onclick="startAssessment()">Start</button>
   </div>
 
   <!-- =======================
@@ -248,26 +248,26 @@ let userInfo = {};
        /*✅✏️ Q1 */
       {
         section: "Section 1: Keyboards",
-        text: "<strong>Question 1:</strong> Do you use equipment that combines the screen and keyboard? For instance: you use a laptop without connecting it to a separate screen, or you use a tablet?",
+        text: "Does your computer set up have a separate screen and a separate keyboard? (This means it is not just the laptop, and it is not just a tablet).,
         tip: "The keyboard should be separate from the screen, unless you are using your portable device for a short time only.  It’s ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard.",
-        yesFeedback: "Great but remember, the keyboard should be separate from the screen, unless you are using your portable device for a short time only.  It’s ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard."
+        yesFeedback: "Good! The keyboard should be separate from the screen, unless you are using your portable device for a shout time only, it's ok to use a tablet for up to an hour, or to use your laptop as a portable device for up to around 3 hours, but after that you should have a separate screen and keyboard."
   },
        /*✅✏️ Q2 */
       {
-        text: "<strong>Question 2:</strong> Are you able to tilt the keyboard to suit your preference?",
+        text: "Are you able to tilt the keyboard to suit your preference?",
         tip: "Keyboard tilt is a matter of personal preference. Raise the feet under the keyboard to tilt up, or, fold the feet down to use the keyboard flat on the desk.",
-      yesFeedback: "Great! A comfortable keying position helps reduce strain on your shoulders and wrists."
+      yesFeedback: "Remember a comfortable keying position helps reduce strain on your shoulders and wrists."
   },
        /*✅✏️ Q3 */
       {
-        text: "<strong>Question 3:</strong> Can you find a comfortable keying position? As shown in the first image, you should sit upright and have room to rest your palms or wrists on the desk for support when you are not typing.",
+        text: "Can you find a comfortable keying position? As shown in the first image, you should sit upright and have room to rest your palms or wrists on the desk for support when you are not typing.",
         tip: "Try pushing the screen further back to create more room for the keyboard, hands and wrist. Move the keyboard to allow room to rest your palms or wrists on the desk for support when you are not typing. You might like to use a wrist-rest. Remember to sit upright. You might need to adjust your chair position to help.",
         image: "comfortable-keying-position.png",
-        followUp: { text: "Do you need a new keyboard?", field: "newKeyboard" },
+        yesFeedback: "Good!"
   },
       /*✅✏️ Q4 */
       {
-        text: `<strong>Question 4:</strong> Do you have good keyboard technique?
+        text: `Do you have good keyboard technique?
           <p>In order to have a good keyboard technique you should meet this guidance: </p>
 <ul>
 <li>Position your wrists so they are in line with your forearms. Your wrists should not bend up or down</li>
@@ -276,27 +276,28 @@ let userInfo = {};
 <li>If you rest your wrists on the desk - don’t press down on them</li>
 </ul>
 <p>Do you meet the guidance?</p>`,
-         tip: "Can you follow the steps above and bring your keyboard technique inline with the guidance?"
+         tip: "Can you follow the steps above and bring your keyboard technique in line with the guidance?"
+         yesFeedback: "Well done!"
   },
       /*✅✏️ Q5 */
       {
-        text: "<strong>Question 5:</strong> Are the characters on your keyboard clear and readable?",
+        text: "Are the characters on your keyboard clear and readable?",
         tip: "Clean the keyboard with wipes – these are provided in SAS offices. You could try tilting your keyboard differently to avoid glare. If the characters still can’t be read, or the keys have become shiny through wear, then your keyboard may need replacing.",
-     yesFeedback: "Great! Remember to keep your keyboard clean – wipes are provided in SAS offices."
+     yesFeedback: "Good to hear! Remember to keep your keyboard clean – wipes are provided in SAS offices."
   },
       /*✅✏️ Q6 */
       {
         section: "Section 2: Mouse",
-        text: "<strong>Question 6:</strong> Is the mouse suitable for the tasks you do?",
+        text: "Is the mouse suitable for the tasks you do?",
         tip: `Different shapes and sizes of mouse are available. Or, an alternative device such as a tablet may suit your task. You can also use keyboard commands rather than a mouse. Using even a few keyboard commands cuts down on mouse use and is beneficial. You can learn about keyboard commands at <a href="https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec" target="_blank" rel="noopener noreferrer">
 Keyboard shortcuts in Windows - Microsoft Support
 </a>.`,
-      followUp: { text: "Do you want to request a different type of mouse or request an alternative device?", field: "newMouse" }
+        yesFeedback: "Good to hear! Remember you can reduce your mouse use by using some keyboard commands. You can learn about keyboard commands at Keyboard shortcuts in Windows - Microsoft support <strong>(add link)</strong>"
   },
       /*✅✏️ Q7 */
       {
-        text: `<strong>Question 7:</strong> Do you hold the mouse close to the keyboard?
-         <p>As shown in the first image you should:</p>
+        text: `Do you hold the mouse close to the keyboard?
+         <p>As shown in the image you should:</p>
 <ul>
 <li>Position the mouse close to the keyboard</li>
 <li>Avoid stretching your arm too far to reach the mouse</li>
@@ -308,12 +309,13 @@ Keyboard shortcuts in Windows - Microsoft Support
 <li>Ensure that the mouse cable isn’t catching on anything</li>
 <li>Regularly check that the mouse hasn’t moved away from the keyboard during your shift</li>
 </ul>`,
-        tip: "Bring your mouse to a suitable position as the picture showed and beware of it moving over your shift.",
-        image: "Mouse-hold.png"
+        tip: "Bring your mouse to a suitable position as shown in the image and beware of it moving over your shift.",
+        image: "Mouse-hold.png",
+          yesFeedback: "Great!"
   },
         /*✅✏️ Q8 */
       {
-        text: "<strong>Question 8:</strong> When you are using the mouse, is there enough support for your wrist and forearm?",
+        text: "When you are using the mouse, is there enough support for your wrist and forearm if you need it?",
         tip: "You should be able to position the mouse comfortably. Use the desk surface or your chair’s armrest for support. If these aren’t suitable, a separate support device may help. Mouse mats with built-in wrist supports are available.",
       yesFeedback: "Great! You should be able to position the mouse comfortably. Use the desk surface or your chair’s armrest for support. If these aren’t suitable, a separate support device may help. Mouse mats with built-in wrist supports are available."
   },
@@ -805,7 +807,7 @@ function showWelcomeScreen() {
 document.getElementById("restartBtn").style.display = "none";
   appendMessage(
     `<h3 class="wel">Hi ${userInfo.name}, I'm <strong>ErgoBot</strong> 👋</h3>
-   This ergonomics self-check assessment is designed to help you take a fresh look at how your workstation is set up.<br><br>
+   This self-assessment has 30 questions designed to fine tune your computer work station.<br><br>
    
    You’ll be asked <strong>36 short</strong> questions and it should take around <strong>15 minutes</strong> to complete.<br><br>
 
