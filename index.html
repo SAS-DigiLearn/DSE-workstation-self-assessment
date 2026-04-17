@@ -709,7 +709,7 @@ appendMessage(feedback, 'bot');
       if (helped) {
         await showTyping();
         appendMessage("Fantastic! Glad that worked.", 'bot');
-        userAnswers.push({ question: q.text, answer: "Initial no but resolved with ErgoBot support", tip: q.extraTip, image: q.image, issue: null });
+        userAnswers.push({ question: q.text, answer: "Initial no, but resolved with ErgoBot support", tip: q.extraTip, image: q.image, issue: null });
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await askFollowUp(q);
@@ -932,6 +932,7 @@ function editUserInfo() {
     <input id="edit-name" value="${userInfo.name}" placeholder="Name">
     <input id="edit-base" value="${userInfo.base}" placeholder="Base/site">
     <input id="edit-job" value="${userInfo.job}" placeholder="Job title">
+    <input id="edit-manager" value="${userInfo.manager}" placeholder="Line manager">
     <input id="edit-desk" value="${userInfo.desk || ""}" placeholder="Desk number">
 
     <br>
@@ -948,6 +949,7 @@ function renderUserInfo() {
     Name: ${userInfo.name}<br>
     Base: ${userInfo.base}<br>
     Job: ${userInfo.job}<br>
+    Manager: ${userInfo.manager}<br>
     Desk: ${userInfo.desk || "-"}<br><br>
     <button onclick="editUserInfo()">Edit</button>
   `;
@@ -957,6 +959,7 @@ function saveUserInfo() {
   const name = document.getElementById('edit-name').value.trim();
   const base = document.getElementById('edit-base').value.trim();
   const job = document.getElementById('edit-job').value.trim();
+  const manager = document.getElementById('edit-manager').value.trim();
   const desk = document.getElementById('edit-desk').value.trim();
 
   if (!name || !base || !job) {
@@ -964,7 +967,7 @@ function saveUserInfo() {
     return;
   }
 
-  userInfo = { name, base, job, desk };
+  userInfo = { name, base, job, manager, desk };
 
   renderUserInfo();
 }
@@ -1079,6 +1082,7 @@ document.getElementById("progressHeader").style.display = "none";
     "Name",
     "Base",
     "Job",
+    "Line manager",
     "Desk",
     "Question",
     "Answer",
@@ -1090,6 +1094,7 @@ document.getElementById("progressHeader").style.display = "none";
       userInfo.name,
       userInfo.base,
       userInfo.job,
+      userInfo.manager,
       userInfo.desk,
       formatHTMLtoText(entry.question),
       entry.answer,
@@ -1139,6 +1144,7 @@ document.body.removeChild(link);
         `Name: ${userInfo.name || ""}`,
         `Base: ${userInfo.base || ""}`,
         `Job title: ${userInfo.job || ""}`,
+        `Line manager: ${userInfo.manager || ""}`,
         `Desk: ${userInfo.desk || ""}`
       ];
       details.forEach(line => {
