@@ -1039,21 +1039,24 @@ function showSummary() {
   `, "bot");
 
   // ✅ Group answers by section
-  const grouped = {};
+const grouped = {};
+let currentSection = "Other";
 
-  userAnswers.forEach((a, i) => {
-    const section = questions[i].section || "Other";
+userAnswers.forEach((a, i) => {
+  // If this question defines a new section, update it
+  if (questions[i].section) {
+    currentSection = questions[i].section;
+  }
 
-    if (!grouped[section]) {
-      grouped[section] = [];
-    }
+  if (!grouped[currentSection]) {
+    grouped[currentSection] = [];
+  }
 
-    grouped[section].push({
-      ...a,
-      index: i
-    });
+  grouped[currentSection].push({
+    ...a,
+    index: i
   });
-
+});
   // ✅ Accordion container
   const container = document.createElement("div");
 
