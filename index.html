@@ -620,7 +620,16 @@ header.style.display = "";
   let section = q.section || currentSection;
 currentSection = section;
 
-document.getElementById("sectionHeader").innerText = section || "";
+const headerEl = document.getElementById("sectionHeader");
+
+headerEl.innerText = section || "";
+
+// Apply dynamic colour
+if (sectionColors[section]) {
+  headerEl.style.backgroundColor = sectionColors[section];
+} else {
+  headerEl.style.backgroundColor = "#b91e71"; // fallback
+}
 
     appendMessage(q.text, 'bot', q.image);
 
@@ -633,7 +642,16 @@ document.getElementById("sectionHeader").innerText = section || "";
   }
 }
 
-
+const sectionColors = {
+  "Section 1: Keyboards": "#b91e71",
+  "Section 2: Mouse": "#0d6efd",
+  "Section 3: Display screens": "#198754",
+  "Section 4: Other equipment": "#fd7e14",
+  "Section 5: Software": "#6f42c1",
+  "Section 6: Furniture": "#20c997",
+  "Section 7: Environment": "#dc3545",
+  "Section 8: Final Checks": "#343a40"
+};
 
 function nextQuestion() {
   currentQuestion++;
