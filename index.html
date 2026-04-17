@@ -844,6 +844,9 @@ function showReviewScreen() {
   messages.innerHTML = '';
   controls.innerHTML = '';
 
+  const header = document.getElementById("sectionHeader");
+header.style.display = "none";
+  
   appendMessage("Review your answers before finishing:", "bot");
 
  // User detail review
@@ -998,6 +1001,9 @@ function saveUserInfo() {
    function showSummary() {
   messages.innerHTML = '';
   controls.innerHTML = '';
+
+  const header = document.getElementById("sectionHeader");
+  header.style.display = "none";
 
   appendMessage("Final Summary", "bot");
 
