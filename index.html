@@ -195,6 +195,7 @@
     <input id="Name" placeholder="Your name" aria-label="Your full name" required>
     <input id="baseSite" placeholder="Base/site" aria-label="Your base or work site" required>
     <input id="jobTitle" placeholder="Job title" aria-label="Your job title" required>
+    <input id="managerName" placeholder="Line manager" aria-label="Your line manager" required>
     <input id="deskNumber" placeholder="Desk number (ACC and NHQ only)" aria-label="Your desk number if applicable">
 
     <button onclick="startAssessment()">Start</button>
@@ -569,12 +570,14 @@ yesFeedback: "Good to hear!"
       const nameField = document.getElementById('Name');
       const baseField = document.getElementById('baseSite');
       const jobField = document.getElementById('jobTitle');
+      const managerField = document.getElementById('managerName');
       const deskField = document.getElementById('deskNumber');
 
       userInfo = {
         name: nameField.value.trim(),
         base: baseField.value.trim(),
         job: jobField.value.trim(),
+        manager: managerField.value.trim(),
         desk: deskField.value.trim()
       };
 
@@ -583,6 +586,7 @@ yesFeedback: "Good to hear!"
       if (!userInfo.name) missing.push(nameField);
       if (!userInfo.base) missing.push(baseField);
       if (!userInfo.job) missing.push(jobField);
+      if (!userInfo.manager) missing.push(managerField);
 
       if (missing.length > 0) {
         missing.forEach(f => f.style.borderColor = 'red');
