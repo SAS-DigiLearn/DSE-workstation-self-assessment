@@ -195,7 +195,7 @@
     <input id="Name" placeholder="Your name" aria-label="Your full name" required>
     <input id="baseSite" placeholder="Base/site" aria-label="Your base or work site" required>
     <input id="jobTitle" placeholder="Job title" aria-label="Your job title" required>
-    <input id="deskNumber" placeholder="Desk number (ACC and NHQ only) (if applicable)" aria-label="Your desk number if applicable">
+    <input id="deskNumber" placeholder="Desk number (ACC and NHQ only)" aria-label="Your desk number if applicable">
 
     <button onclick="startAssessment()">Start</button>
   </div>
@@ -268,7 +268,7 @@ let userInfo = {};
       /*✅✏️ Q4 */
       {
         text: `Do you have good keyboard technique?
-          <p>In order to have a good keyboard technique you should meet this guidance: </p>
+          <p>In order to have a good keyboard technique you should meet this guidance:</p>
 <ul>
 <li>Position your wrists so they are in line with your forearms. Your wrists should not bend up or down</li>
 <li>Avoid hitting the keys too hard</li>
@@ -398,140 +398,155 @@ Make any necessary adjustments before continuing.
   },
        /*✅✏️ Q16 */
       {
-        text: "<strong>Question 16:</strong> Is your screen free from glare and reflections?",
+        text: "Is your screen free from glare and reflections?",
         image: "glare-reflections.png",
-        tip: `<p>Try turning the screen off to check where reflections are coming from. You might need to move the screen or even the desk and/or shield the screen from the source of the reflections.</P>
-        <p>Screens that use dark characters on a light background are less prone to glare and reflections. You may be able to alter your display.</p>`,
-      yesFeedback: "Great! If you do have problems in the future, then turn the screen off to check where reflections are coming from. You might need to move the screen or even the desk and/or shield the screen from the source of the reflections. You may find that screens that use dark characters on a light background are less prone to glare and reflections."
+        tip: `<p>Try turning the screen off to check where reflections are coming from. You might need to move the screen (or even the desk) or shield the screen from the source of the reflections.</P>
+        <p>You may need to adjust the blinds or window coverings.</p>,
+          <p>Screens that use dark characters on a light background are less prone to glare and reflections. You may be able to change your display in your computer settings.</p>`,
+      yesFeedback: `<p>Great! If you do have problems in the future, then turn the screen off to check where reflections are coming from. You might need to move the screen (or even the desk) or shield the screen from the source of the reflections.</p>
+      <p>You can adjust blinds or window coverings to deal with glare.</p>
+      <p>You may find that screens that use dark characters on a light background are less prone to glare and reflections.</p>`
   },
        /*✅✏️ Q17 */
       {
-        text: "<strong>Question 17:</strong> Are adjustable window coverings (such as blinds) provided and are they in adequate condition?",
+        text: "<strong>Remove question</strong> Are adjustable window coverings (such as blinds) provided and are they in adequate condition?",
         tip: "Window coverings can be adjusted to help with glare on the screen.  If there is a problem with the window coverings (or other problems with glare that you cannot resolve, further support is available).",
       yesFeedback: "Window coverings can be adjusted to help with glare on the screen."
   },
         /*✅✏️ Q18 */
       {
         section: "Section 4: Other equipment",
-        text: "<strong>Question 18:</strong> Do you use a computer headset?",
+        text: "A headset can be useful when you are on Teams calls or you are taking calls through your computer. Do you use a headset?",
         tip: "A headset can be useful when you’re on Teams calls or taking calls through your computer. If you have a headset available, try using it on your next call.",
-        followUp: { text: "Do you want to request a headset?", field: "newHeadset" },
-      yesFeedback: "Great! Using a headset can improve comfort and sound quality during Teams or computer calls."
+        followUp: { text: "Do you require a headset?", field: "newHeadset" },
+      yesFeedback: "Good. we hop you find your headset useful."
   },
         /*✅✏️ Q19 */
       {
         section: "Section 5: Software",
-        text: "<strong>Question 19:</strong> Is the software you use suitable for the task and are you confident in using the software?",
-        tip: "It sounds like you might need some support. The IT Helpdesk can assist you with this."
+        text: "Is the software you use suitable for the task and are you confident in using the software?",
+        yesFeedback: "Good to hear."
   },
       /*✅✏️ Q20 */
       {
         section: "Section 6: Furniture",
-        text: "<strong>Question 20:</strong> Is your work surface large enough for all your necessary equipment, papers etc.?",
-        tip: "Create more room by moving reference materials etc. elsewhere."
+        text: "Is your work surface large enough for all your necessary equipment, paper etc. And can you comfortably reach everything you need?",
+       tip: `<p>Create more room by moving less frequently used items elsewhere.</P>
+          <p>Try rearranging things to bring frequently used items within easy reach</p>`,
+        yesFeedback: "Good to hear!"
   },
       /*✅✏️ Q21 */
       {
-        text: "<strong>Question 21:</strong> Can you comfortably reach all the equipment and papers you need to use?",
+        text: "<strong>Remove question</strong> Can you comfortably reach all the equipment and papers you need to use?",
         tip: "Try rearranging equipment, papers etc. to bring frequently used items within easy reach."
   },
       /*✅✏️ Q22 */
       {
-        text: "<strong>Question 22:</strong> Is your chair stable and does it have all its casters?",
-        tip: "If your chair is unstable or missing a caster, it must be repaired or replaced."
+        text: "Is you chair stable, does it have all its casters, and is the foam cushioning in good condition?",
+        tip: "Your chair should be replaced if it is unstable, or, there is a problem with the casters, or, foam cushioning doesn't provide enough protection from the frame",
+        yesFeedback: "Good to hear!"
   },
       /*✅✏️ Q23 */
       {
-        text: "<strong>Question 23:</strong> Does the seat have working back-rest height and seat tilt adjustments? And do you know how to use the controls?",
+        text: "Does the seat have working back-rest height and seat tilt adjustments? And do you know how to use the controls?",
         tip: `These instructions may help you to adjust your chair.
         <p><strong>How to adjust the back rest height</strong></p>
         <p>Stand behind the chair and slowly pull the backrest upwards from underneath. You will hear it click as it goes up. Let go of the backrest- it will stay at the selected height. If you pull the backrest up too far you will go past the ‘clicks’, and the backrest will fall to the bottom, and you can start again.</p>
         <p><strong>How to adjust the seat back tilt</strong></p>
         <p>The seat tilt control can be adjusted from the seated position. Pull upwards on the lever to enable adjustment, push downwards to lock. You may also have a seat tilt adjustment so take care as to which lever is doing which movement.</p>
-        `
+        `,
+          yesFeedback: "Great!"
   },
         /*✅✏️ Q24 */
       {
-        text: "<strong>Question 24:</strong> Is your chair correctly adjusted so it is comfortable and supports the small of your back?",
+        text: "Is your chair correctly adjusted so it is comfortable and supports the small of your back?",
         image: "chair-support.png",
         tip: `<ul>
 <li>Try adjusting the chair controls (back height and seat tilt) so that you can achieve a comfortable upright sitting position. You may have lumbar cushioning in your chair - ensure when adjusting the back height that the cushioned support is in the right place for you</li>
 <li>Adopt suitable posture while working. Ideally your back would be upright and your shoulders relaxed</li>
-<li>Adjust the height of the arms if they are preventing you getting close enough to the desk</li>
+<li>Adjust the height of the armrest if they are preventing you getting close enough to the desk</li>
 <li>Move any obstructions from under the desk</li>
-</ul>`
+</ul>`,
+yesFeedback: "Good to hear!"
   },
         /*✅✏️ Q25 */
       {
-        text: "<strong>Question 25:</strong> Is the foam cushioning on your chair in good condition and does it provide sufficient protection from the frame?",
+        text: "<strong>Remove question</strong> Is the foam cushioning on your chair in good condition and does it provide sufficient protection from the frame?",
         tip: "Report the problem to your line manager, ensure you have provided the number of the chair if appropriate (it will be found on back of chair)."
   },
        /*✅✏️ Q26 */
       {
-        text: `<strong>Question 26:</strong> Is your desk at elbow height?
+        text: `Is your desk at elbow height?
         <p>Your forearms will be horizontal if you are sitting at the right height for the desk.</p>`,
         tip:  `<ul>
 <li>Adjust the chair height (or desk height) to get your arms in the right position (forearms should be horizontal)</li>
 <li>You may then need to re-adjust the screen height so that the top of screen is just below your eye level</li>
-</ul>`
+</ul>`,
+    yesFeedback: "Good to hear!"
   },
        /*✅✏️ Q27 */
       {
-        text: "<strong>Question 27:</strong> Are your feet flat on the floor, without too much pressure from the seat on the backs of the legs?",
+        text: "Are your feet flat on the floor, without too much pressure from the seat on the backs of the legs?",
         tip: "Do you have access to an adjustable footrest?",
-        followUp: { text: "Would you like to request a footrest?", field: "newFootrest"}
+        followUp: { text: "Would you like to request a footrest?", field: "newFootrest"},
+        yesFeedback: "Great!"
   },
        /*✅✏️ Q28 */
       {
         section: "Section 7: Environment",
-        text: "<strong>Question 28:</strong> Do you have enough room to change position and vary your movement?",
-        tip: "You should have enough space to move and stretch. Cables should be tidy and not cause a trip or snag hazard."
+        text: "Do you have enough room to change position and vary your movement?",
+        tip: "You should have enough space to move and stretch. Cables should be tidy and not cause a trip or snag hazard.",
+        yesFeedback: "Good!"
   },
       /*✅✏️ Q29 */
       {
-        text: "<strong>Question 29:</strong> Is the lighting suitable, i.e. not too bright or too dim to work comfortably?",
-        tip: "Light levels in offices are set to suitable Lux Level standards and are reviewed regularly. However, if a problem is localised consider adjusting the window blinds, re-positioning light sources or use a desk lamp (make sure lamps don’t cause glare by reflecting off walls or other surfaces)."
+        text: "Is the lighting suitable, i.e. not too bright or too dim to work comfortably?",
+        tip: "Light levels in offices are set to suitable Lux Level standards and are reviewed regularly. However, if a problem is localised consider adjusting the window blinds, re-positioning light sources or use a desk lamp (make sure lamps don’t cause glare by reflecting off walls or other surfaces).",
+        yesFeedback: "Good to hear!"
   },
        /*✅✏️ Q30 */
       {
-        text: "<strong>Question 30:</strong> Does the air feel comfortable?",
-        tip: `<p>Display screen equipment and other equipment may dry the air. Air temperature and flow in SAS offices are regulated to be within set HSE standards.</P>
-        <p>Dry air can be eased by adding a bit of moisture to your workspace, such as using a humidifier or keeping a glass of water nearby, staying well‑hydrated, opening windows occasionally for fresh airflow.</p>`
+        text: "Is the temperature, humidity and air quality in your workspace comfortable?",
+        tip: "Air temperature, air flow and humidity in SAS offices are set within HSE standards, however everyone's own body temperature can be affected differently. If too hot - consider whether you can move away from the heat source? If too cold - consider localised heating or put on extra layers of clothing. The only additional heating to be used in offices are SAS supplied oil filled radiators. Fans are not allowed in SAS offices.",
+        yesFeedback: "Good to hear!"
   },
        /*✅✏️ Q31 */
       {
-        text: "<strong>Question 31:</strong> Are levels of heat comfortable?",
+        text: "<strong>Remove question</strong> Are levels of heat comfortable?",
         tip: "Temperatures in SAS offices are set within HSE standards, however everyone’s own body temperature can be affected differently. If too hot - consider whether you can move away from the heat source? If too cold - consider localised heating or put on extra layers of clothing. The only additional heating to be used in offices are SAS supplied oil filled radiators. Fans are not allowed in SAS offices."
   },
        /*✅✏️ Q32 */
       {
-        text: "<strong>Question 32:</strong> Are levels of noise comfortable?",
+        text: "Are levels of noise comfortable?",
         tip: "Noise levels in SAS offices are tested regularly to ensure they are within HSE standards. Consider if there is a quieter space to work? Noise cancelling headsets may be an option.",
-        followUp: { text: "Do you want to request a noise cancelling headset?", field: "newHeadset" }     
+        yesFeedback: "Great!"
   },
        /*✅✏️ Q33 */
       {
         section: "Section 8: Final Checks",
-        text: "<strong>Question 33:</strong> Is everything in your workspace and DSE equipment setup now working well for you?",
+        text: "Are there any further problems with your worspace or DSE equipment that you haven't already told us about?",
         tip: "Has this issue already been identified in one of your previous answers in the questionnaire?"
   },
        /*✅✏️ Q34 */
       {
-        text: "<strong>Question 34:</strong> Are you free from any discomfort or symptoms you attribute to using your DSE?",
+        text: "Do you have any pain or discomfort that you attribute to using your DSE?",
         tip: "Have you already reported this discomfort or these symptoms earlier in the questionnaire?"
   },
        /*✅✏️ Q35 */
       {
-        text: "<strong>Question 35:</strong> Are you aware of your entitlement to eye and eyesight testing?",
+        text: "Are you aware of your entitlement to eye and eyesight testing?",
         tip: `Some people suffer from eye strain, however there is no evidence that DSE causes damage to eyes.
         <p>Sight tests are free in Scotland, and you should arrange to have your eyes tested regularly by an optician.</p>
-        <p>If you require corrective lenses for the sole purpose of computer use (i.e. standard corrective lenses do not offer adequate correction) then the Service will meet the cost/make a contribution to the cost. Please refer to the Finance Department’s Procedure on the Reimbursement of Spectacle Costs ahead of arranging an eye examination with your optician</p>`
+        <p>If you require corrective lenses for the sole purpose of computer use (i.e. standard corrective lenses do not offer adequate correction) then the Service will meet the cost/make a contribution to the cost. Please refer to the Finance Department’s Procedure on the Reimbursement of Spectacle Costs ahead of arranging an eye examination with your optician</p>`,
+        yesFeedback: `Sight tests are free in Scotland, and you should arrange to have your eyes tested regularly by an optician.
+        <p>Some people suffer from eye strain, however there is no evidence that DSE causes damage to eyes.</p>
+        <p>If you require corrective lenses for the sole purpose of computer use (i.e. standard corrective lenses do not offer adequate correction) then the Service will meet the cost/make a contribution to the cost. Please refer to the Finance Department’s Procedure on the Reimbursement of Spectacle Costs ahead of arranging an eye examination with your optician</p>`  
   },
        /*✅✏️ Q36 */
       {
-        text: "<strong>Question 36:</strong> Do you take regular breaks working away from your display screen equipment?",
-        tip: "Incorporate micro breaks into your day i.e. spend a few minutes standing or doing other activities and take about 5 minutes away from your workstation every hour or 10 minutes every 2 hours.",
-      yesFeedback: "Great! You should incorporate micro breaks into your day i.e. spend a few minutes standing or doing other activities and take about 5 minutes away from your workstation every hour or 10 minutes every 2 hours."
+        text: "Do you take regular breaks working away from your display screen equipment?",
+        tip: "You should incorporate micro breaks into your day. Take some time each hour to stand up or do something different, stepping away from your workstation for about 5 minutes every hour - or 10 minutes every two hours.",
+      yesFeedback: "Great! You should incorporate micro breaks into your day. Take some time each hour to stand up or do something different, stepping away from your workstation for about 5 minutes every hour - or 10 minutes every two hours."
   }
     ];
 
