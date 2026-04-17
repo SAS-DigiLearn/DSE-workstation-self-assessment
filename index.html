@@ -1132,11 +1132,6 @@ userAnswers.forEach((a, i) => {
         sectionContent.style.display === "block" ? "none" : "block";
     };
 
-    // ✅ Auto-open sections with issues
-    if (issueCount > 0) {
-      sectionContent.style.display = "block";
-      sectionHeader.classList.add("active");
-    }
 
     sectionItem.appendChild(sectionHeader);
     sectionItem.appendChild(sectionContent);
@@ -1144,12 +1139,6 @@ userAnswers.forEach((a, i) => {
   });
 
   messages.appendChild(container);
-
-  // ✅ Buttons stay visible
-  controls.innerHTML = `
-    <button onclick="downloadPDF()">Download PDF</button>
-    <button onclick="downloadCSV()">Download CSV</button>
-  `;
 }
 
 function restartAssessment() {
