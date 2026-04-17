@@ -888,6 +888,7 @@ function showReviewScreen() {
 
   const header = document.getElementById("sectionHeader");
 header.style.display = "none";
+  document.getElementById("restartBtn").style.display = "none";
   
   appendMessage("Review your answers before finishing:", "bot");
 
@@ -1046,6 +1047,8 @@ function showSummary() {
 
   const header = document.getElementById("sectionHeader");
   header.style.display = "none";
+
+  document.getElementById("restartBtn").style.display = "none";
 
   // ✅ Top guidance
  const summaryHeader = document.createElement("div");
