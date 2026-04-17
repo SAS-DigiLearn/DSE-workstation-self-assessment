@@ -205,6 +205,26 @@
   opacity: 0.9;
 }
 
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-left {
+  max-width: 70%;
+}
+
+.summary-right {
+  display: flex;
+  gap: 8px;
+}
+
+.summary-right button {
+  white-space: nowrap;
+}
+
   </style>
 </head>
 
@@ -1028,15 +1048,24 @@ function showSummary() {
   header.style.display = "none";
 
   // ✅ Top guidance
-  appendMessage(`
-    <strong>Your assessment is complete ✅</strong><br><br>
-    You can now:
-    <ul>
-      <li>Download your report</li>
-      <li>Review any issues you flagged</li>
-      <li>Share with your manager if required</li>
-    </ul>
-  `, "bot");
+ const summaryHeader = document.createElement("div");
+summaryHeader.className = "message bot summary-header";
+
+summaryHeader.innerHTML = `
+  <div class="summary-left">
+    <strong>Your assessment is complete ✅</strong><br>
+    <small>
+      Download your report, review issues, or share with your manager.
+    </small>
+  </div>
+
+  <div class="summary-right">
+    <button onclick="downloadPDF()">PDF</button>
+    <button onclick="downloadCSV()">CSV</button>
+  </div>
+`;
+
+messages.appendChild(summaryHeader);
 
   // ✅ Group answers by section
 const grouped = {};
