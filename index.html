@@ -705,7 +705,7 @@ appendMessage(feedback, 'bot');
       if (helped) {
         await showTyping();
         appendMessage("Fantastic! Glad that worked.", 'bot');
-        userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.extraTip, image: q.image, issue: null });
+        userAnswers.push({ question: q.text, answer: "Initial no but resolved with ErgoBot support", tip: q.extraTip, image: q.image, issue: null });
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await askFollowUp(q);
