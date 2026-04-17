@@ -183,6 +183,28 @@
   transition: background-color 0.4s ease;
 }
 
+.accordion-item {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 5px;
+}
+
+.accordion-header {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.accordion-content {
+  display: none;
+  padding: 10px;
+  background: #fff;
+}
+
+.accordion-header.active {
+  opacity: 0.9;
+}
+
   </style>
 </head>
 
@@ -998,27 +1020,105 @@ function saveUserInfo() {
 }
 
 
-   function showSummary() {
+function showSummary() {
   messages.innerHTML = '';
   controls.innerHTML = '';
 
   const header = document.getElementById("sectionHeader");
   header.style.display = "none";
 
-  appendMessage("Final Summary", "bot");
+  // ✅ Top guidance
+  appendMessage(`
+    <strong>Your assessment is complete ✅</strong><br><br>
+    You can now:
+    <ul>
+      <li>Download your report</li>
+      <li>Review any issues you flagged</li>
+      <li>Share with your manager if required</li>
+    </ul>
+  `, "bot");
 
-  userAnswers.forEach(a => {
-    appendMessage(a.question, "bot");
-    appendMessage(a.answer, "user");
-    if (a.issue) appendMessage("Note: " + a.issue, "user");
+  // ✅ Group answers by section
+  const grouped = {};
+
+  userAnswers.forEach((a, i) => {
+    const section = questions[i].section || "Other";
+
+    if (!grouped[section]) {
+      grouped[section] = [];
+    }
+
+    grouped[section].push({
+      ...a,
+      index: i
+    });
   });
 
+  // ✅ Accordion container
+  const container = document.createElement("div");
+
+  Object.keys(grouped).forEach(section => {
+    const sectionItem = document.createElement("div");
+    sectionItem.className = "accordion-item";
+
+    const sectionHeader = document.createElement("div");
+    sectionHeader.className = "accordion-header";
+
+    // Count issues
+    const issueCount = grouped[section].filter(a => a.answer.startsWith("No")).length;
+
+    sectionHeader.innerText = `${section} (${issueCount} issue${issueCount !== 1 ? "s" : ""})`;
+
+    // Apply your existing section colours
+    if (sectionColors && sectionColors[section]) {
+      sectionHeader.style.backgroundColor = sectionColors[section];
+      sectionHeader.style.color = "#fff";
+    }
+
+    const sectionContent = document.createElement("div");
+    sectionContent.className = "accordion-content";
+
+    // 👉 Add questions inside section
+    grouped[section].forEach(a => {
+      const qDiv = document.createElement("div");
+      qDiv.style.marginBottom = "10px";
+
+      qDiv.innerHTML = `
+        <strong>Q${a.index + 1}</strong><br>
+        ${a.question}<br>
+        <strong>Answer:</strong> ${a.answer}<br>
+        ${a.issue ? `<em>Note:</em> ${a.issue}<br>` : ""}
+      `;
+
+      sectionContent.appendChild(qDiv);
+    });
+
+    // ✅ Toggle behaviour
+    sectionHeader.onclick = () => {
+      sectionHeader.classList.toggle("active");
+      sectionContent.style.display =
+        sectionContent.style.display === "block" ? "none" : "block";
+    };
+
+    // ✅ Auto-open sections with issues
+    if (issueCount > 0) {
+      sectionContent.style.display = "block";
+      sectionHeader.classList.add("active");
+    }
+
+    sectionItem.appendChild(sectionHeader);
+    sectionItem.appendChild(sectionContent);
+    container.appendChild(sectionItem);
+  });
+
+  messages.appendChild(container);
+
+  // ✅ Buttons stay visible
   controls.innerHTML = `
     <button onclick="downloadPDF()">Download PDF</button>
     <button onclick="downloadCSV()">Download CSV</button>
   `;
 }
-
 
 function restartAssessment() {
   if (!confirm("Are you sure you want to restart? All progress will be lost.")) {
