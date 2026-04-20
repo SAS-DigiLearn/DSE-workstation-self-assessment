@@ -1181,10 +1181,7 @@ userAnswers.forEach((a, i) => {
     const sectionHeader = document.createElement("div");
     sectionHeader.className = "accordion-header";
 
-    // Count issues
-    const issueCount = grouped[section].filter(a => a.isIssue).length;
-
-    sectionHeader.innerText = `${section} (${issueCount} issue${issueCount !== 1 ? "s" : ""})`;
+  sectionHeader.innerText = section;
 
     // Apply your existing section colours
     if (sectionColors && sectionColors[section]) {
