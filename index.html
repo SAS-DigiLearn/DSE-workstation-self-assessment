@@ -1309,38 +1309,7 @@ document.getElementById("progressHeader").style.display = "none";
       doc.__currentColor = [r, g, b];
     }
 
-  function downloadCSV() {
-  let rows = [];
-
-  rows.push([
-    "Name",
-    "Base",
-    "Job",
-    "Line manager",
-    "Desk",
-    "Question",
-    "Answer",
-    "Issue"
-  ]);
-
-  userAnswers.forEach(entry => {
-    rows.push([
-      userInfo.name,
-      userInfo.base,
-      userInfo.job,
-      userInfo.manager,
-      userInfo.desk,
-      formatHTMLtoText(entry.question),
-      entry.answer,
-      entry.issue || ""
-    ]);
-  });
-
-  const csvContent = rows.map(e =>
-    e.map(v => `"${(v || "").replace(/"/g, '""')}"`).join(",")
-  ).join("\n");
-
-function generateCSVBlob() {
+ function generateCSVBlob() {
   let rows = [];
 
   rows.push([
