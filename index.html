@@ -944,6 +944,12 @@ function beginQuestions() {
   showQuestion();
 }
 //New function
+
+async function downloadBoth() {
+  await downloadCSV();
+  setTimeout(() => downloadPDF(), 500);
+}
+    
 function showReviewScreen() {
   messages.innerHTML = '';
   controls.innerHTML = '';
@@ -1120,13 +1126,12 @@ summaryHeader.innerHTML = `
   <div class="summary-left">
     <strong>Your assessment is complete</strong><br>
     <p>
-      Download your report, which consists of two files, a PDF for your own ... and a CSV file to be sent to your line manager.
+      Download your report, which consists of two files, a PDF for your own records and a CSV file to be sent to your line manager.
     </p>
   </div>
 
   <div class="summary-right">
-    <button onclick="downloadPDF()">PDF</button>
-    <button onclick="downloadCSV()">CSV</button>
+   <button onclick="downloadBoth()">Download Report</button>
   </div>
 `;
 
