@@ -3,6 +3,7 @@
 <head>
   <!-- ⛔ Include jsPDF library for PDF generation ⛔ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -945,9 +946,23 @@ function beginQuestions() {
 }
 //New function
 
-async function downloadBoth() {
-  await downloadCSV();
-  setTimeout(() => downloadPDF(), 500);
+async function downloadZIP() {
+  const zip = new JSZip();
+
+  const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
+
+  const csvBlob = generateCSVBlob();
+  const pdfBlob = await generatePDFBlob();
+
+  zip.file(`ErgoBot_${safeName}.csv`, csvBlob);
+  zip.file(`ErgoBot_SelfCheck_${safeName}.pdf`, pdfBlob);
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(zipBlob);
+  link.download = `ErgoBot_Report_${safeName}.zip`;
+  link.click();
 }
     
 function showReviewScreen() {
@@ -1126,12 +1141,12 @@ summaryHeader.innerHTML = `
   <div class="summary-left">
     <strong>Your assessment is complete</strong><br>
     <p>
-      Download your report, which consists of two files, a PDF for your own records and a CSV file to be sent to your line manager.
+      Download your report, which consists of a zip file with two documents inside, a PDF for your own records and a CSV file to be sent to your line manager.
     </p>
   </div>
 
   <div class="summary-right">
-   <button onclick="downloadBoth()">Download Report</button>
+   <button onclick="downloadZIP()">Download Report</button>
   </div>
 `;
 
@@ -1325,15 +1340,38 @@ document.getElementById("progressHeader").style.display = "none";
     e.map(v => `"${(v || "").replace(/"/g, '""')}"`).join(",")
   ).join("\n");
 
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-const link = document.createElement("a");
-link.href = URL.createObjectURL(blob);
-link.download = `ErgoBot_${userInfo.name}.csv`;
+function generateCSVBlob() {
+  let rows = [];
 
-link.style.display = "none";
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
+  rows.push([
+    "Name",
+    "Base",
+    "Job",
+    "Line manager",
+    "Desk",
+    "Question",
+    "Answer",
+    "Issue"
+  ]);
+
+  userAnswers.forEach(entry => {
+    rows.push([
+      userInfo.name,
+      userInfo.base,
+      userInfo.job,
+      userInfo.manager,
+      userInfo.desk,
+      formatHTMLtoText(entry.question),
+      entry.answer,
+      entry.issue || ""
+    ]);
+  });
+
+  const csvContent = rows.map(e =>
+    e.map(v => `"${(v || "").replace(/"/g, '""')}"`).join(",")
+  ).join("\n");
+
+  return new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
 }
 
     async function downloadPDF() {
@@ -1414,7 +1452,7 @@ document.body.removeChild(link);
       addFooterToAllPages(doc, margin);
 
       const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
-      doc.save(`ErgoBot_SelfCheck_${safeName}.pdf`);
+      return doc.output("blob");
     }
   </script>
 </body>
