@@ -732,6 +732,9 @@ function nextQuestion() {
     if (isYes) {
       // YES → ask for issue directly
       await showTyping();
+
+      q._reverseYes = true;
+    
       await askForIssue(q);
     } else {
       // NO → good to hear
@@ -842,13 +845,30 @@ appendMessage(feedback, 'bot');
 
       if (needsNewItem) {
         appendMessage("Okay, this will be noted in your report.", 'bot');
-        userAnswers.push({
-          question: q.text,
-          answer: "No (unresolved)",
-          tip: q.extraTip || q.tip,
-          image: q.image,
-          issue: `User indicated they need a new ${q.followUp.field.replace('new', '').toLowerCase()}.`
-        });
+       submitBtn.onclick = async () => {
+  const issueText = textarea.value.trim();
+  if (!issueText) {
+    alert("Please enter a brief description before continuing.");
+    return;
+  }
+
+  appendMessage(issueText, 'user');
+  await showTyping();
+  appendMessage("Thanks for sharing, your description will be included in your report.", 'bot');
+
+  const isReverse = q.reverseFlow && q._reverseYes;
+
+  userAnswers.push({
+    question: q.text,
+    answer: isReverse ? "Yes (issue reported)" : "No (unresolved)",
+    tip: q.extraTip || q.tip,
+    image: q.image,
+    issue: issueText,
+    isIssue: true
+  });
+
+  controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+};
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         appendMessage("Got it, we'll just note that no replacement is needed.", 'bot');
@@ -1141,7 +1161,7 @@ userAnswers.forEach((a, i) => {
     sectionHeader.className = "accordion-header";
 
     // Count issues
-    const issueCount = grouped[section].filter(a => a.answer.startsWith("No")).length;
+    const issueCount = grouped[section].filter(a => a.isIssue).length;
 
     sectionHeader.innerText = `${section} (${issueCount} issue${issueCount !== 1 ? "s" : ""})`;
 
