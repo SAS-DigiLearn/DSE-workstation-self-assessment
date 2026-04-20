@@ -895,7 +895,7 @@ appendMessage(feedback, 'bot');
         }
         appendMessage(issueText, 'user');
         await showTyping();
-        appendMessage("Thanks for sharing, your description will be included in your report.", 'bot');
+        appendMessage("Thanks for sharing, your input will be included in your report.", 'bot');
         userAnswers.push({
           question: q.text,
           answer: "No (unresolved)",
@@ -1117,7 +1117,7 @@ summaryHeader.className = "message bot summary-header";
 
 summaryHeader.innerHTML = `
   <div class="summary-left">
-    <strong>Your assessment is complete/strong><br>
+    <strong>Your assessment is complete</strong><br>
     <p>
       Download your report, which consists of two files, a PDF for your own ... and a CSV file to be sent to your line manager.
     </p>
