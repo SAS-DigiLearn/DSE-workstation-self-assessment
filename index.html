@@ -555,12 +555,12 @@ yesFeedback: "Good to hear!"
       {
         section: "Section 8: Final Checks",
         text: "Are there any further problems with your worspace or DSE equipment that you haven't already told us about?",
-        skipTip: true
+        reverseFlow: true
   },
        /*✅✏️ Q28 */
       {
         text: "Do you have any pain or discomfort that you attribute to using your DSE?",
-        tip: "Have you already reported this discomfort or these symptoms earlier in the questionnaire?"
+        reverseFlow: true
   },
        /*✅✏️ Q29 */
       {
@@ -726,6 +726,30 @@ function nextQuestion() {
       const q = questions[currentQuestion];
       controls.innerHTML = '';
       appendMessage(isYes ? "Yes" : "No", 'user');
+
+       // ✅ SPECIAL FLOW FOR Q27 & Q28
+  if (q.reverseFlow) {
+    if (isYes) {
+      // YES → ask for issue directly
+      await showTyping();
+      await askForIssue(q);
+    } else {
+      // NO → good to hear
+      await showTyping();
+      appendMessage("Good to hear!", 'bot');
+
+      userAnswers.push({
+        question: q.text,
+        answer: "No",
+        tip: null,
+        image: null,
+        issue: null
+      });
+
+      controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+    }
+    return; // ⛔ IMPORTANT: stop normal flow
+  }
 
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
