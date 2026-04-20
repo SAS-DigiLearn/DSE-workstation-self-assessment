@@ -464,15 +464,18 @@ Make any necessary adjustments before continuing.
       {
         section: "Section 6: Furniture",
         text: "Is your work surface large enough for all your necessary equipment, paper etc. And can you comfortably reach everything you need?",
-       tip: `<p>Create more room by moving less frequently used items elsewhere.</p>
-          <p>Try rearranging things to bring frequently used items within easy reach</p>`,
+       tip: `<ul>
+       <li>Create more room by moving less frequently used items elsewhere.</li>
+          <li>Try rearranging things to bring frequently used items within easy reach</li>
+          </ul>`,
         yesFeedback: "Good to hear!"
   },
      
       /*✅✏️ Q18 */
       {
-        text: "Is your chair stable, does it have all its casters, and is the foam cushioning in good condition?",
-        tip: "Your chair should be replaced if it is unstable, or, there is a problem with the casters, or, foam cushioning doesn't provide enough protection from the frame",
+        text: `Is your chair stable, does it have all its casters, and is the foam cushioning in good condition?
+          <p>(Your chair should be replaced if it is unstable, or, there is a problem with the casters, or, foam cushioning doesn't provide enough protection from the frame)</p>`,
+        skipTip: true,
         yesFeedback: "Good to hear!"
   },
       /*✅✏️ Q19 */
@@ -511,7 +514,7 @@ yesFeedback: "Good to hear!"
        /*✅✏️ Q22 */
       {
         text: "Are your feet flat on the floor, without too much pressure from the seat on the backs of the legs?",
-        tip: "Do you have access to an adjustable footrest?",
+        skipTip: true,
         followUp: { text: "Would you like to request a footrest?", field: "newFootrest"},
         yesFeedback: "Great!"
   },
@@ -530,22 +533,29 @@ yesFeedback: "Good to hear!"
   },
        /*✅✏️ Q25 */
       {
-        text: "Is the temperature, humidity and air quality in your workspace comfortable?",
-        tip: "Air temperature, air flow and humidity in SAS offices are set within HSE standards, however everyone's own body temperature can be affected differently. If too hot - consider whether you can move away from the heat source? If too cold - consider localised heating or put on extra layers of clothing. The only additional heating to be used in offices are SAS supplied oil filled radiators. Fans are not allowed in SAS offices.",
+        text: `Is the temperature, humidity and air quality in your workspace comfortable?
+        <ul>
+        <li>Air temperature, air flow and humidity in SAS offices are set within HSE standards, however everyone's own body temperature can be affected differently. If too hot - consider whether you can move away from the heat source? If too cold - consider localised heating or put on extra layers of clothing.</li>
+        <li>The only additional heating to be used in offices are SAS supplied oil filled radiators. Fans are not allowed in SAS offices.</li>
+        </ul>`,
+       skipTip: true,
         yesFeedback: "Good to hear!"
   },
       
        /*✅✏️ Q26 */
       {
-        text: "Are levels of noise comfortable?",
-        tip: "Noise levels in SAS offices are tested regularly to ensure they are within HSE standards. Consider if there is a quieter space to work? Noise cancelling headsets may be an option.",
+        text: `Are levels of noise comfortable?
+        <ul>
+        <li>Noise levels in SAS offices are tested regularly to ensure they are within HSE standards. Consider if there is a quieter space to work? Noise cancelling headsets may be an option.</li>
+        </ul>`,
+       skipTip: true,
         yesFeedback: "Great!"
   },
        /*✅✏️ Q27 */
       {
         section: "Section 8: Final Checks",
         text: "Are there any further problems with your worspace or DSE equipment that you haven't already told us about?",
-        tip: "Has this issue already been identified in one of your previous answers in the questionnaire?"
+        skipTip: true
   },
        /*✅✏️ Q28 */
       {
