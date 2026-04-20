@@ -449,7 +449,8 @@ Make any necessary adjustments before continuing.
       {
         section: "Section 4: Other equipment",
         text: "A headset can be useful when you are on Teams calls or you are taking calls through your computer. Do you use a headset?",
-        tip: { text: "Do you require a headset?", field: "newHeadset" },
+        skipTip: true,
+        followUp: { text: "Do you require a headset?", field: "newHeadset" },
       yesFeedback: "Good. we hop you find your headset useful."
   },
         /*✅✏️ Q16 */
@@ -726,6 +727,12 @@ appendMessage(feedback, 'bot');
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await showTyping();
+
+         // ✅ If question says skip tip → go straight to follow-up
+  if (q.skipTip) {
+    await askFollowUp(q);
+    return;
+  }
         appendMessage(q.tip, 'bot');
         await showTyping();
         appendMessage("Did this help solve the issue?", 'bot');
