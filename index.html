@@ -952,7 +952,7 @@ async function downloadZIP() {
   const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
 
   const csvBlob = generateCSVBlob();
-  const pdfBlob = await generatePDFBlob();
+  const pdfBlob = await downloadPDF();
 
   zip.file(`ErgoBot_${safeName}.csv`, csvBlob);
   zip.file(`ErgoBot_SelfCheck_${safeName}.pdf`, pdfBlob);
