@@ -557,12 +557,12 @@ yesFeedback: "Good to hear!"
       {
         section: "Section 8: Final Checks",
         text: "Are there any further problems with your worspace or DSE equipment that you haven't already told us about?",
-        reverseFlow: true
+        freeText: true
   },
        /*✅✏️ Q28 */
       {
         text: "Do you have any pain or discomfort that you attribute to using your DSE?",
-        reverseFlow: true
+        freeText: true
   },
        /*✅✏️ Q29 */
       {
@@ -690,12 +690,43 @@ if (sectionColors[section]) {
   headerEl.style.backgroundColor = "#b91e71"; // fallback
 }
 
-    appendMessage(q.text, 'bot', q.image);
+   appendMessage(q.text, 'bot', q.image);
 
-    controls.innerHTML = `
-      <button onclick="handleAnswer(true)">Yes</button>
-      <button onclick="handleAnswer(false)">No</button>
-    `;
+if (q.freeText) {
+  const textarea = document.createElement('textarea');
+  textarea.placeholder = "Optional: type here if you'd like to add anything...";
+  textarea.rows = 3;
+
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = "Next Question";
+
+  nextBtn.onclick = () => {
+    const text = textarea.value.trim();
+
+    if (text) {
+      appendMessage(text, 'user');
+    }
+
+    userAnswers.push({
+      question: q.text,
+      answer: text ? "User comment provided" : "No comment",
+      tip: null,
+      image: null,
+      issue: text || null
+    });
+
+    nextQuestion();
+  };
+
+  controls.appendChild(textarea);
+  controls.appendChild(nextBtn);
+
+} else {
+  controls.innerHTML = `
+    <button onclick="handleAnswer(true)">Yes</button>
+    <button onclick="handleAnswer(false)">No</button>
+  `;
+}
   } else {
     showReviewScreen();
   }
@@ -729,33 +760,7 @@ function nextQuestion() {
       controls.innerHTML = '';
       appendMessage(isYes ? "Yes" : "No", 'user');
 
-       // ✅ SPECIAL FLOW FOR Q27 & Q28
-  if (q.reverseFlow) {
-    if (isYes) {
-      // YES → ask for issue directly
-      await showTyping();
-
-      q._reverseYes = true;
     
-      await askForIssue(q);
-    } else {
-      // NO → good to hear
-      await showTyping();
-      appendMessage("Good to hear!", 'bot');
-
-      userAnswers.push({
-        question: q.text,
-        answer: "No",
-        tip: null,
-        image: null,
-        issue: null
-      });
-
-      controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
-    }
-    return; // ⛔ IMPORTANT: stop normal flow
-  }
-
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
         await showTyping();
