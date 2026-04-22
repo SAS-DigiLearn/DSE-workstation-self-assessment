@@ -773,7 +773,7 @@ appendMessage(feedback, 'bot');
       } else {
         await showTyping();
 
-         // ✅ If question says skip tip → go straight to follow-up
+         // ✅ If question says skip tip, go straight to follow-up
   if (q.skipTip) {
     await askFollowUp(q);
     return;
@@ -796,7 +796,7 @@ appendMessage(feedback, 'bot');
       if (helped) {
         await showTyping();
         appendMessage("Great! Glad that helped.", 'bot');
-        userAnswers.push({ question: q.text, answer: "No (but resolved with ErgoBot support)", tip: q.tip, image: q.image, issue: null });
+        userAnswers.push({ question: q.text, answer: "Initial no, but resolved with ErgoBot support", tip: q.tip, image: q.image, issue: null });
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         if (q.extraTip) {
@@ -932,7 +932,7 @@ document.getElementById("restartBtn").style.display = "none";
    
     It should take around <strong>15 minutes</strong> to complete.<br><br>
 
-    Dont worry if you dont get everything right first time, you’ll be able to review and change your answers at the end.<br><br>
+    Dont worry if you think you've made a mistake, you’ll be able to review and change your personal details and answers at the end.<br><br>
     `,
     "bot"
   );
