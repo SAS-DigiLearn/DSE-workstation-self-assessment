@@ -1149,6 +1149,7 @@ function editUserInfo() {
 
 function renderUserInfo() {
   const div = document.getElementById('review-userinfo');
+  if (!div) return;
 
   div.innerHTML = `
     <strong>Your Details</strong><br>
