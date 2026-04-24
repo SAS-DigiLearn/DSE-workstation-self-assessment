@@ -1185,8 +1185,9 @@ userAnswers.forEach((a, i) => {
     const sectionItem = document.createElement("div");
     sectionItem.className = "accordion-item";
 
-    const sectionHeader = document.createElement("div");
+    const sectionHeader = document.createElement("button");
     sectionHeader.className = "accordion-header";
+    sectionHeader.type = "button";
 
   sectionHeader.innerText = section;
 
@@ -1198,6 +1199,18 @@ userAnswers.forEach((a, i) => {
 
     const sectionContent = document.createElement("div");
     sectionContent.className = "accordion-content";
+
+    const contentId = `accordion-content-${section}`;
+const headerId = `accordion-header-${section}`;
+
+sectionHeader.id = headerId;
+sectionContent.id = contentId;
+
+sectionHeader.setAttribute("aria-controls", contentId);
+sectionHeader.setAttribute("aria-expanded", "false");
+
+sectionContent.setAttribute("role", "region");
+sectionContent.setAttribute("aria-labelledby", headerId);
 
     // 👉 Add questions inside section
     grouped[section].forEach(a => {
@@ -1215,11 +1228,13 @@ userAnswers.forEach((a, i) => {
     });
 
     // ✅ Toggle behaviour
-  sectionHeader.onclick = () => {
+function toggleAccordion(sectionHeader, sectionContent) {
   const isOpening = sectionContent.style.display !== "block";
 
   sectionHeader.classList.toggle("active");
   sectionContent.style.display = isOpening ? "block" : "none";
+
+  sectionHeader.setAttribute("aria-expanded", isOpening ? "true" : "false");
 
   if (isOpening) {
     setTimeout(() => {
@@ -1227,10 +1242,11 @@ userAnswers.forEach((a, i) => {
         behavior: "smooth",
         block: "start"
       });
-    }, 50); // slight delay
+    }, 50);
   }
-};
+}
 
+sectionHeader.onclick = () => toggleAccordion(sectionHeader, sectionContent);
 
     sectionItem.appendChild(sectionHeader);
     sectionItem.appendChild(sectionContent);
