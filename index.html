@@ -973,7 +973,26 @@ async function downloadZIP() {
   link.download = `ErgoBot_Report_${safeName}.zip`;
   link.click();
 }
-    
+
+   // ✅ Toggle behaviour
+function toggleAccordion(sectionHeader, sectionContent) {
+  const isOpening = sectionContent.style.display !== "block";
+
+  sectionHeader.classList.toggle("active");
+  sectionContent.style.display = isOpening ? "block" : "none";
+
+  sectionHeader.setAttribute("aria-expanded", isOpening ? "true" : "false");
+
+  if (isOpening) {
+    setTimeout(() => {
+      sectionHeader.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 50);
+  }
+}
+
 function showReviewScreen() {
   messages.innerHTML = '';
   controls.innerHTML = '';
@@ -1312,24 +1331,7 @@ function handleAccordionKeydown(e, headers, currentIndex) {
   }
 }
     
-    // ✅ Toggle behaviour
-function toggleAccordion(sectionHeader, sectionContent) {
-  const isOpening = sectionContent.style.display !== "block";
-
-  sectionHeader.classList.toggle("active");
-  sectionContent.style.display = isOpening ? "block" : "none";
-
-  sectionHeader.setAttribute("aria-expanded", isOpening ? "true" : "false");
-
-  if (isOpening) {
-    setTimeout(() => {
-      sectionHeader.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }, 50);
-  }
-}
+ 
 
 sectionHeader.onclick = () => toggleAccordion(sectionHeader, sectionContent);
 
