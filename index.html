@@ -979,31 +979,77 @@ function showReviewScreen() {
   controls.innerHTML = '';
 
   const header = document.getElementById("sectionHeader");
-header.style.display = "none";
+  header.style.display = "none";
   document.getElementById("restartBtn").style.display = "none";
-  
+
   appendMessage("Review your answers before finishing:", "bot");
 
- // User detail review
-  const infoDiv = document.createElement('div');
-  infoDiv.className = 'message bot';
-  infoDiv.id = 'review-userinfo';
-  messages.appendChild(infoDiv);
+  const container = document.createElement("div");
 
-  renderUserInfo(); 
-  
+  // =========================
+  // 🔹 ACCORDION ITEM 1: USER DETAILS
+  // =========================
+  const userItem = document.createElement("div");
+  userItem.className = "accordion-item";
+
+  const userHeader = document.createElement("button");
+  userHeader.className = "accordion-header";
+  userHeader.textContent = "Your Details";
+
+  const userContent = document.createElement("div");
+  userContent.className = "accordion-content";
+  userContent.id = "review-userinfo";
+
+  userItem.appendChild(userHeader);
+  userItem.appendChild(userContent);
+  container.appendChild(userItem);
+
+  renderUserInfo(); // populate content
+
+  userHeader.onclick = () => toggleAccordion(userHeader, userContent);
+
+  // =========================
+  // 🔹 ACCORDION ITEM 2: ALL ANSWERS
+  // =========================
+  const answersItem = document.createElement("div");
+  answersItem.className = "accordion-item";
+
+  const answersHeader = document.createElement("button");
+  answersHeader.className = "accordion-header";
+  answersHeader.textContent = "Your Answers";
+
+  const answersContent = document.createElement("div");
+  answersContent.className = "accordion-content";
+  answersContent.style.maxHeight = "400px"; // 👈 keeps it scrollable
+  answersContent.style.overflowY = "auto";
+
+  // 👉 Render all answers inside ONE container
   userAnswers.forEach((entry, index) => {
     const div = document.createElement('div');
     div.className = 'message bot';
     div.id = `review-${index}`;
-    messages.appendChild(div);
+    answersContent.appendChild(div);
 
-    renderReviewItem(index); // ✅ use renderer
+    renderReviewItem(index);
   });
+
+  answersItem.appendChild(answersHeader);
+  answersItem.appendChild(answersContent);
+  container.appendChild(answersItem);
+
+  answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
+
+  // =========================
+  // ADD TO PAGE
+  // =========================
+  messages.appendChild(container);
 
   controls.innerHTML = `
     <button onclick="showSummary()">Finish & Generate Report</button>
   `;
+
+  // 👇 Optional: open first accordion by default
+  toggleAccordion(userHeader, userContent);
 }
     
 function editInline(index) {
