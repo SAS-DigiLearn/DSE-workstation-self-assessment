@@ -1215,11 +1215,21 @@ userAnswers.forEach((a, i) => {
     });
 
     // ✅ Toggle behaviour
-    sectionHeader.onclick = () => {
-      sectionHeader.classList.toggle("active");
-      sectionContent.style.display =
-        sectionContent.style.display === "block" ? "none" : "block";
-    };
+  sectionHeader.onclick = () => {
+  const isOpening = sectionContent.style.display !== "block";
+
+  sectionHeader.classList.toggle("active");
+  sectionContent.style.display = isOpening ? "block" : "none";
+
+  if (isOpening) {
+    setTimeout(() => {
+      sectionHeader.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 50); // slight delay
+  }
+};
 
 
     sectionItem.appendChild(sectionHeader);
