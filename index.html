@@ -1023,7 +1023,21 @@ function showReviewScreen() {
   userItem.appendChild(userContent);
   container.appendChild(userItem);
 
-  renderUserInfo(); // populate content
+ 
+  // =========================
+  // ADD TO PAGE
+  // =========================
+  messages.appendChild(container);
+
+  controls.innerHTML = `
+    <button onclick="showSummary()">Finish & Generate Report</button>
+  `;
+
+  // 👇 Optional: open first accordion by default
+  toggleAccordion(userHeader, userContent);
+}
+
+ renderUserInfo(); // populate content
 
   userHeader.onclick = () => toggleAccordion(userHeader, userContent);
 
@@ -1058,18 +1072,6 @@ function showReviewScreen() {
 
   answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
 
-  // =========================
-  // ADD TO PAGE
-  // =========================
-  messages.appendChild(container);
-
-  controls.innerHTML = `
-    <button onclick="showSummary()">Finish & Generate Report</button>
-  `;
-
-  // 👇 Optional: open first accordion by default
-  toggleAccordion(userHeader, userContent);
-}
     
 function editInline(index) {
   const entry = userAnswers[index];
