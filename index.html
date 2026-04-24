@@ -1229,6 +1229,42 @@ sectionContent.setAttribute("aria-labelledby", headerId);
       sectionContent.appendChild(qDiv);
     });
 
+function handleAccordionKeydown(e, headers, currentIndex) {
+  let newIndex = null;
+
+  switch (e.key) {
+    case "ArrowDown":
+      newIndex = (currentIndex + 1) % headers.length;
+      break;
+
+    case "ArrowUp":
+      newIndex = (currentIndex - 1 + headers.length) % headers.length;
+      break;
+
+    case "Home":
+      newIndex = 0;
+      break;
+
+    case "End":
+      newIndex = headers.length - 1;
+      break;
+
+    case "Enter":
+    case " ":
+      e.preventDefault();
+      headers[currentIndex].click(); // trigger toggle
+      return;
+
+    default:
+      return;
+  }
+
+  if (newIndex !== null) {
+    e.preventDefault();
+    headers[newIndex].focus();
+  }
+}
+    
     // ✅ Toggle behaviour
 function toggleAccordion(sectionHeader, sectionContent) {
   const isOpening = sectionContent.style.display !== "block";
@@ -1256,6 +1292,13 @@ sectionHeader.onclick = () => toggleAccordion(sectionHeader, sectionContent);
   });
 
   messages.appendChild(container);
+  const headers = container.querySelectorAll(".accordion-header");
+
+headers.forEach((header, index) => {
+  header.addEventListener("keydown", (e) => {
+    handleAccordionKeydown(e, headers, index);
+  });
+});
 }
 
 function restartAssessment() {
