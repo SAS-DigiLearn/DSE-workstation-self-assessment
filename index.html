@@ -1292,11 +1292,13 @@ sectionHeader.onclick = () => toggleAccordion(sectionHeader, sectionContent);
   });
 
   messages.appendChild(container);
-  const headers = container.querySelectorAll(".accordion-header");
+ const headers = container.querySelectorAll(".accordion-header");
 
-headers.forEach((header, index) => {
+headers.forEach((header) => {
   header.addEventListener("keydown", (e) => {
-    handleAccordionKeydown(e, headers, index);
+    const headersArray = Array.from(headers);
+    const index = headersArray.indexOf(header);
+    handleAccordionKeydown(e, headersArray, index);
   });
 });
 }
