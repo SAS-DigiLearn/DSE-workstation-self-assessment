@@ -1060,6 +1060,7 @@ function showReviewScreen() {
 
   const userContent = document.createElement("div");
   userContent.className = "accordion-content";
+  renderUserInfo();
   userContent.id = "review-userinfo";
 
   userItem.appendChild(userHeader);
@@ -1083,6 +1084,7 @@ function showReviewScreen() {
   answersContent.className = "accordion-content";
   answersContent.style.maxHeight = "400px"; // 👈 keeps it scrollable
   answersContent.style.overflowY = "auto";
+  answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
 
   // 👉 Render all answers inside ONE container
   userAnswers.forEach((entry, index) => {
@@ -1111,7 +1113,7 @@ function showReviewScreen() {
   toggleAccordion(userHeader, userContent);
 
 
- renderUserInfo(); // populate content
+ 
 
   userHeader.onclick = () => toggleAccordion(userHeader, userContent);
 }
