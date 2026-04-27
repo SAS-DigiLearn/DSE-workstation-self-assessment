@@ -1060,14 +1060,13 @@ function showReviewScreen() {
 
   const userContent = document.createElement("div");
   userContent.className = "accordion-content";
-  renderUserInfo();
   userContent.id = "review-userinfo";
 
   userItem.appendChild(userHeader);
   userItem.appendChild(userContent);
   container.appendChild(userItem);
 
- 
+ renderUserInfo();
  
 
   // =========================
@@ -1084,7 +1083,7 @@ function showReviewScreen() {
   answersContent.className = "accordion-content";
   answersContent.style.maxHeight = "400px"; // 👈 keeps it scrollable
   answersContent.style.overflowY = "auto";
-  answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
+  
 
   // 👉 Render all answers inside ONE container
   userAnswers.forEach((entry, index) => {
@@ -1100,6 +1099,11 @@ function showReviewScreen() {
   answersItem.appendChild(answersContent);
   container.appendChild(answersItem);
 
+  [userHeader, answersHeader].forEach((header, i) => {
+  const content = i === 0 ? userContent : answersContent;
+  header.onclick = () => toggleAccordion(header, content);
+});
+
   // =========================
   // ADD TO PAGE
   // =========================
@@ -1112,10 +1116,6 @@ function showReviewScreen() {
   // 👇 Optional: open first accordion by default
   toggleAccordion(userHeader, userContent);
 
-
- 
-
-  userHeader.onclick = () => toggleAccordion(userHeader, userContent);
 }
     
 function editInline(index) {
