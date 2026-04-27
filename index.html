@@ -1125,16 +1125,24 @@ function editInline(index) {
   const entry = userAnswers[index];
   const div = document.getElementById(`review-${index}`);
 
+  // 🧠 store original state (for cancel)
+  entry._backup = {
+    answer: entry.answer,
+    issue: entry.issue
+  };
+
+  const isYes = entry.answer.startsWith("Yes");
+
   div.innerHTML = `
     <strong>Editing Q${index + 1}</strong><br>
     ${entry.question}<br><br>
 
     <button id="toggle-${index}">
-      ${entry.answer.startsWith("Yes") ? "Change to No" : "Change to Yes"}
+      ${isYes ? "Change to No" : "Change to Yes"}
     </button>
 
-    <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer.startsWith("No") ? "block" : "none"};">
-      <textarea id="issue-${index}" placeholder="Add or update note...">${entry.issue || ""}</textarea>
+    <div id="issueBox-${index}" style="margin-top:10px; display:${isYes ? "none" : "block"};">
+      <textarea id="issue-${index}" rows="3">${entry.issue || ""}</textarea>
     </div>
 
     <br>
@@ -1143,29 +1151,30 @@ function editInline(index) {
   `;
 
   const toggleBtn = document.getElementById(`toggle-${index}`);
-  const saveBtn = document.getElementById(`save-${index}`);
-  const cancelBtn = document.getElementById(`cancel-${index}`);
+  const issueBox = document.getElementById(`issueBox-${index}`);
+
+  // local UI state (NOT saved yet)
+  let currentAnswer = entry.answer;
 
   toggleBtn.onclick = () => {
-    const box = document.getElementById(`issueBox-${index}`);
-    const isNowYes = entry.answer.startsWith("Yes");
+    const isYesNow = currentAnswer.startsWith("Yes");
 
-    if (isNowYes) {
-      box.style.display = "block";
-      entry.answer = "No";
+    if (isYesNow) {
+      currentAnswer = "No";
+      issueBox.style.display = "block";
       toggleBtn.textContent = "Change to Yes";
     } else {
-      box.style.display = "none";
-      entry.answer = "Yes";
+      currentAnswer = "Yes";
+      issueBox.style.display = "none";
       toggleBtn.textContent = "Change to No";
     }
   };
 
-  saveBtn.onclick = () => saveInline(index);
+  document.getElementById(`save-${index}`).onclick = () =>
+    saveInline(index, currentAnswer);
 
-  cancelBtn.onclick = () => {
-    renderReviewItem(index, div);
-  };
+  document.getElementById(`cancel-${index}`).onclick = () =>
+    cancelInline(index);
 }
     
  
@@ -1182,34 +1191,43 @@ function toggleIssueBox(index, isNo) {
   }
 }
 
-function saveInline(index) {
+function saveInline(index, updatedAnswer) {
+  const entry = userAnswers[index];
   const q = questions[index];
-  const div = document.getElementById(`review-${index}`);
 
   const textarea = document.getElementById(`issue-${index}`);
   const issueText = textarea ? textarea.value.trim() : "";
 
-  const answer = userAnswers[index].answer.startsWith("No") ? "No" : "Yes";
+  entry.answer = updatedAnswer;
+  entry.issue = updatedAnswer.startsWith("No") ? issueText : null;
 
-  userAnswers[index] = {
-    question: q.text,
-    answer,
-    tip: q.tip,
-    issue: answer === "No" ? issueText : null
-  };
+  delete entry._backup; // clear temp state
 
   renderReviewItem(index);
 }
 
     
 function cancelInline(index) {
+  const entry = userAnswers[index];
+  const div = document.getElementById(`review-${index}`);
+
+  // restore original values
+  if (entry._backup) {
+    entry.answer = entry._backup.answer;
+    entry.issue = entry._backup.issue;
+    delete entry._backup;
+  }
+
   renderReviewItem(index);
 }
 
 function renderReviewItem(index, div) {
   const entry = userAnswers[index];
 
-  if (!div) return; // safety guard
+  if (!div) {
+    div = document.getElementById(`review-${index}`);
+  }
+  if (!div) return;
 
   div.innerHTML = `
     <strong>Q${index + 1}</strong><br>
