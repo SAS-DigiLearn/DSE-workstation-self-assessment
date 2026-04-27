@@ -848,6 +848,49 @@ appendMessage(feedback, 'bot');
       `;
     }
 
+  async function askForIssue(q) {
+  await showTyping();
+  appendMessage("Please describe the problem so we can follow up:", 'bot');
+
+  const textarea = document.createElement('textarea');
+  textarea.placeholder = "Type here...";
+  textarea.rows = 3;
+
+  const submitBtn = document.createElement('button');
+  submitBtn.textContent = "Submit Issue";
+
+  submitBtn.onclick = async () => {
+    const issueText = textarea.value.trim();
+
+    if (!issueText) {
+      alert("Please enter a brief description before continuing.");
+      return;
+    }
+
+    appendMessage(issueText, 'user');
+    await showTyping();
+    appendMessage("Thanks for sharing, your input will be included in your report.", 'bot');
+
+    userAnswers.push({
+      question: q.text,
+      answer: "No (unresolved)",
+      tip: q.tip,
+      image: q.image,
+      issue: issueText
+    });
+
+    controls.innerHTML = '';
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = "Next Question";
+    nextBtn.onclick = nextQuestion;
+    controls.appendChild(nextBtn);
+  };
+
+  controls.appendChild(textarea);
+  controls.appendChild(submitBtn);
+}
+
   async function handleFollowUpAnswer(needsNewItem) {
   const q = questions[currentQuestion];
 
