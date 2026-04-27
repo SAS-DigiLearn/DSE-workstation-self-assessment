@@ -848,14 +848,15 @@ appendMessage(feedback, 'bot');
       `;
     }
 
-    async function handleFollowUpAnswer(needsNewItem) {
+  async function handleFollowUpAnswer(needsNewItem) {
   const q = questions[currentQuestion];
 
   appendMessage(needsNewItem ? "Yes" : "No", 'user');
-  controls.innerHTML = '';
-  await showTyping();
 
-  // ✅ YES path (simple — no textarea)
+  await showTyping();
+  controls.innerHTML = ''; // ✅ clear AFTER typing
+
+  // ✅ YES path
   if (needsNewItem) {
     appendMessage("Okay, this will be noted in your report.", 'bot');
 
@@ -867,10 +868,14 @@ appendMessage(feedback, 'bot');
       issue: null
     });
 
-    controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+    // ✅ ALWAYS recreate button fresh
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = "Next Question";
+    nextBtn.onclick = nextQuestion;
+    controls.appendChild(nextBtn);
   }
 
-  // ✅ NO path (requires textarea input)
+  // ✅ NO path
   else {
     appendMessage("Please describe the problem so we can follow up:", 'bot');
 
@@ -901,7 +906,13 @@ appendMessage(feedback, 'bot');
         issue: issueText
       });
 
-      controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+      controls.innerHTML = '';
+
+     
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = "Next Question";
+      nextBtn.onclick = nextQuestion;
+      controls.appendChild(nextBtn);
     };
 
     controls.appendChild(textarea);
