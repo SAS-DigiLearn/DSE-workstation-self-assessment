@@ -1003,7 +1003,7 @@ async function downloadZIP() {
 
 const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
 const fileDate = new Date().toLocaleDateString("en-GB").replaceAll("/", "-");
-
+  
 zip.file(`ErgoBot_${safeName}_${fileDate}.csv`, csvBlob);
 zip.file(`ErgoBot_SelfCheck_${safeName}_${fileDate}.pdf`, pdfBlob);
 
@@ -1014,7 +1014,7 @@ link.href = URL.createObjectURL(zipBlob);
 link.download = `ErgoBot_Report_${safeName}_${fileDate}.zip`;
 link.click();
 
-  const fileDate = new Date().toISOString().split("T")[0];
+  
 }
 
    // ✅ Toggle behaviour
