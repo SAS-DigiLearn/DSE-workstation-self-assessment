@@ -1086,15 +1086,15 @@ function showReviewScreen() {
   
 
   // 👉 Render all answers inside ONE container
-  userAnswers.forEach((entry, index) => {
-    const div = document.createElement('div');
-    div.className = 'message bot';
-    div.id = `review-${index}`;
-    answersContent.appendChild(div);
+userAnswers.forEach((entry, index) => {
+  const div = document.createElement('div');
+  div.className = 'message bot';
+  div.id = `review-${index}`;
+  answersContent.appendChild(div);
 
-    renderReviewItem(index);
-  });
-
+  renderReviewItem(index, div); 
+});
+  
   answersItem.appendChild(answersHeader);
   answersItem.appendChild(answersContent);
   container.appendChild(answersItem);
@@ -1185,9 +1185,10 @@ function cancelInline(index) {
   renderReviewItem(index);
 }
 
-function renderReviewItem(index) {
+function renderReviewItem(index, div) {
   const entry = userAnswers[index];
-  const div = document.getElementById(`review-${index}`);
+
+  if (!div) return; // safety guard
 
   div.innerHTML = `
     <strong>Q${index + 1}</strong><br>
