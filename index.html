@@ -1067,22 +1067,7 @@ function showReviewScreen() {
   container.appendChild(userItem);
 
  
-  // =========================
-  // ADD TO PAGE
-  // =========================
-  messages.appendChild(container);
 
-  controls.innerHTML = `
-    <button onclick="showSummary()">Finish & Generate Report</button>
-  `;
-
-  // 👇 Optional: open first accordion by default
-  toggleAccordion(userHeader, userContent);
-
-
- renderUserInfo(); // populate content
-
-  userHeader.onclick = () => toggleAccordion(userHeader, userContent);
 
   // =========================
   // 🔹 ACCORDION ITEM 2: ALL ANSWERS
@@ -1113,8 +1098,16 @@ function showReviewScreen() {
   answersItem.appendChild(answersContent);
   container.appendChild(answersItem);
 
-  answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
-}
+controls.innerHTML = `
+  <button onclick="showSummary()">Finish & Generate Report</button>
+`;
+
+userHeader.onclick = () => toggleAccordion(userHeader, userContent);
+answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
+
+
+toggleAccordion(userHeader, userContent);
+renderUserInfo();
     
 function editInline(index) {
   const entry = userAnswers[index];
