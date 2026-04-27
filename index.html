@@ -849,76 +849,65 @@ appendMessage(feedback, 'bot');
     }
 
     async function handleFollowUpAnswer(needsNewItem) {
-      const q = questions[currentQuestion];
-      appendMessage(needsNewItem ? "Yes" : "No", 'user');
-      controls.innerHTML = '';
-      await showTyping();
+  const q = questions[currentQuestion];
 
-      if (needsNewItem) {
-        appendMessage("Okay, this will be noted in your report.", 'bot');
-       submitBtn.onclick = async () => {
-  const issueText = textarea.value.trim();
-  if (!issueText) {
-    alert("Please enter a brief description before continuing.");
-    return;
+  appendMessage(needsNewItem ? "Yes" : "No", 'user');
+  controls.innerHTML = '';
+  await showTyping();
+
+  // ✅ YES path (simple — no textarea)
+  if (needsNewItem) {
+    appendMessage("Okay, this will be noted in your report.", 'bot');
+
+    userAnswers.push({
+      question: q.text,
+      answer: "Yes (new item requested)",
+      tip: q.tip,
+      image: q.image,
+      issue: null
+    });
+
+    controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
   }
 
-  appendMessage(issueText, 'user');
-  await showTyping();
-  appendMessage("Thanks for sharing, your description will be included in your report.", 'bot');
+  // ✅ NO path (requires textarea input)
+  else {
+    appendMessage("Please describe the problem so we can follow up:", 'bot');
 
-  const isReverse = q.reverseFlow && q._reverseYes;
+    const textarea = document.createElement('textarea');
+    textarea.placeholder = "Type here...";
+    textarea.rows = 3;
 
-  userAnswers.push({
-    question: q.text,
-    answer: isReverse ? "Yes (issue reported)" : "No (unresolved)",
-    tip: q.extraTip || q.tip,
-    image: q.image,
-    issue: issueText,
-    isIssue: true
-  });
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = "Submit Issue";
 
-  controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
-};
-        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
-      } else {
-        appendMessage("Got it, we'll just note that no replacement is needed.", 'bot');
-        await showTyping();
-        await askForIssue(q);
+    submitBtn.onclick = async () => {
+      const issueText = textarea.value.trim();
+
+      if (!issueText) {
+        alert("Please enter a brief description before continuing.");
+        return;
       }
-    }
 
-    async function askForIssue(q) {
+      appendMessage(issueText, 'user');
       await showTyping();
-      appendMessage("Please describe the problem so we can follow up:", 'bot');
-      const textarea = document.createElement('textarea');
-      textarea.placeholder = "Type here...";
-      textarea.rows = 3;
-      controls.appendChild(textarea);
-      const submitBtn = document.createElement('button');
-      submitBtn.textContent = "Submit Issue";
+      appendMessage("Thanks for sharing, your input will be included in your report.", 'bot');
 
-      submitBtn.onclick = async () => {
-        const issueText = textarea.value.trim();
-        if (!issueText) {
-          alert("Please enter a brief description before continuing.");
-          return;
-        }
-        appendMessage(issueText, 'user');
-        await showTyping();
-        appendMessage("Thanks for sharing, your input will be included in your report.", 'bot');
-        userAnswers.push({
-          question: q.text,
-          answer: "No (unresolved)",
-          tip: q.extraTip || q.tip,
-          image: q.image,
-          issue: issueText
-        });
-        controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
-      };
+      userAnswers.push({
+        question: q.text,
+        answer: "No (unresolved)",
+        tip: q.tip,
+        image: q.image,
+        issue: issueText
+      });
 
-      controls.appendChild(submitBtn);
-    }
+      controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+    };
+
+    controls.appendChild(textarea);
+    controls.appendChild(submitBtn);
+  }
+}
 
 function showWelcomeScreen() {
   messages.innerHTML = '';
@@ -936,7 +925,7 @@ document.getElementById("restartBtn").style.display = "none";
    
     It should take around <strong>15 minutes</strong> to complete.<br><br>
 
-    Dont worry if you think you've made a mistake, you’ll be able to review and change your personal details and answers at the end.<br><br>
+    Don't worry if you think you've made a mistake, you’ll be able to review and change your personal details and answers at the end.<br><br>
     `,
     "bot"
   );
@@ -1035,7 +1024,7 @@ function showReviewScreen() {
 
   // 👇 Optional: open first accordion by default
   toggleAccordion(userHeader, userContent);
-}
+
 
  renderUserInfo(); // populate content
 
@@ -1071,7 +1060,7 @@ function showReviewScreen() {
   container.appendChild(answersItem);
 
   answersHeader.onclick = () => toggleAccordion(answersHeader, answersContent);
-
+}
     
 function editInline(index) {
   const entry = userAnswers[index];
@@ -1425,7 +1414,7 @@ document.getElementById("progressHeader").style.display = "none";
 
   function updateProgress() {
   const total = questions.length;
-  const current = currentQuestion + 1;
+  const current = Math.min(currentQuestion + 1, total);
 
 
   const percent = Math.round((current / total) * 100);
