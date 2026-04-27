@@ -1125,27 +1125,34 @@ function editInline(index) {
   const entry = userAnswers[index];
   const div = document.getElementById(`review-${index}`);
 
- const isCurrentlyYes = entry.answer.startsWith("Yes");
+  const isCurrentlyYes = entry.answer.startsWith("Yes");
 
-div.innerHTML = `
-  <strong>Editing Q${index + 1}</strong><br>
-  ${entry.question}<br><br>
+  div.innerHTML = `
+    <strong>Editing Q${index + 1}</strong><br>
+    ${entry.question}<br><br>
 
-  ${
-    isCurrentlyYes
-      ? `<button onclick="toggleIssueBox(${index}, true)">Change to No</button>`
-      : `<button onclick="toggleIssueBox(${index}, false)">Change to Yes</button>`
-  }
+    ${
+      isCurrentlyYes
+        ? `<button id="toggle-${index}">Change to No</button>`
+        : `<button id="toggle-${index}">Change to Yes</button>`
+    }
 
-  <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer.startsWith("No") ? "block" : "none"};">
-    <textarea id="issue-${index}" placeholder="Add or update note...">${entry.issue || ""}</textarea>
-  </div>
+    <div id="issueBox-${index}" style="margin-top:10px; display:${entry.answer.startsWith("No") ? "block" : "none"};">
+      <textarea id="issue-${index}" placeholder="Add or update note...">${entry.issue || ""}</textarea>
+    </div>
 
-  <br>
-  <button onclick="saveInline(${index})">Save</button>
-  <button onclick="cancelInline(${index})">Cancel</button>
-`;
+    <br>
+    <button id="save-${index}">Save</button>
+    <button id="cancel-${index}">Cancel</button>
+  `;
+  const toggleBtn = document.getElementById(`toggle-${index}`);
+  const saveBtn = document.getElementById(`save-${index}`);
+  const cancelBtn = document.getElementById(`cancel-${index}`);
 
+  toggleBtn.onclick = () => toggleIssueBox(index, isCurrentlyYes);
+  saveBtn.onclick = () => saveInline(index);
+  cancelBtn.onclick = () => renderReviewItem(index);
+  
   // store temp answer
   div.dataset.answer = entry.answer.startsWith("No") ? "No" : "Yes";
 }
@@ -1166,18 +1173,20 @@ function toggleIssueBox(index, isNo) {
 function saveInline(index) {
   const q = questions[index];
   const div = document.getElementById(`review-${index}`);
-  const answer = div.dataset.answer || "Yes";
 
   const textarea = document.getElementById(`issue-${index}`);
+  const issueText = textarea ? textarea.value.trim() : "";
+
+  const answer = userAnswers[index].answer.startsWith("No") ? "No" : "Yes";
 
   userAnswers[index] = {
     question: q.text,
-    answer: answer,
+    answer,
     tip: q.tip,
-    issue: answer === "No" ? (textarea ? textarea.value.trim() : "") : null
+    issue: answer === "No" ? issueText : null
   };
 
-  renderReviewItem(index); 
+  renderReviewItem(index);
 }
 
     
