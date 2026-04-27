@@ -1168,10 +1168,7 @@ function editInline(index) {
   };
 }
     
-  // store temp answer
-  div.dataset.answer = entry.answer.startsWith("No") ? "No" : "Yes";
-}
-
+ 
 function toggleIssueBox(index, isNo) {
   const box = document.getElementById(`issueBox-${index}`);
   const div = document.getElementById(`review-${index}`);
