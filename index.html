@@ -1108,7 +1108,10 @@ function showReviewScreen() {
   // ADD TO PAGE
   // =========================
   messages.appendChild(container);
- renderUserInfo();
+requestAnimationFrame(() => {
+  renderUserInfo();
+});
+  
   controls.innerHTML = `
     <button onclick="showSummary()">Finish & Generate Report</button>
   `;
