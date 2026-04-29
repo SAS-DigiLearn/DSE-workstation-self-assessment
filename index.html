@@ -272,6 +272,41 @@
       ⛔ Handles the chatbot logic, flow, and PDF generation ⛔
   ========================== -->
   <script>
+
+function saveProgress() {
+  const data = {
+    currentQuestion,
+    currentSection,
+    userAnswers,
+    userInfo
+  };
+
+  localStorage.setItem("ergoBotProgress", JSON.stringify(data));
+}
+
+function loadProgress() {
+  const saved = localStorage.getItem("ergoBotProgress");
+  if (!saved) return false;
+
+  try {
+    const data = JSON.parse(saved);
+
+    currentQuestion = data.currentQuestion || 0;
+    currentSection = data.currentSection || null;
+    userAnswers = data.userAnswers || [];
+    userInfo = data.userInfo || {};
+
+    return true;
+  } catch (e) {
+    console.error("Failed to load progress", e);
+    return false;
+  }
+}
+
+function clearProgress() {
+  localStorage.removeItem("ergoBotProgress");
+}
+  
    const messages = document.getElementById('messages');
 const controls = document.getElementById('controls');
 document.getElementById('chatbox').style.display = 'none';
@@ -660,6 +695,8 @@ yesFeedback: "Good to hear!"
       document.getElementById('userInfoForm').style.display = 'none';
       document.getElementById('chatbox').style.display = 'block';
 
+      saveProgress();
+
       /* ⛔ DYNAMIC GREETING ⛔ */
     
 showWelcomeScreen();
@@ -749,7 +786,7 @@ const sectionColors = {
 
 function nextQuestion() {
   currentQuestion++;
-
+saveProgress();
   if (currentQuestion >= questions.length) {
     showReviewScreen();
   } else {
@@ -767,8 +804,11 @@ function nextQuestion() {
     
       if (isYes) {
         userAnswers.push({ question: q.text, answer: "Yes", tip: null, image: null, issue: null });
+
+        saveProgress();
+        
         await showTyping();
-      
+
         const feedback =
       q.yesFeedback ||
       positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
@@ -801,6 +841,7 @@ appendMessage(feedback, 'bot');
         await showTyping();
         appendMessage("Great! Glad that helped.", 'bot');
         userAnswers.push({ question: q.text, answer: "Initial no, but resolved with ErgoBot support", tip: q.tip, image: q.image, issue: null });
+       saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         if (q.extraTip) {
@@ -829,6 +870,7 @@ appendMessage(feedback, 'bot');
         await showTyping();
         appendMessage("Fantastic! Glad that worked.", 'bot');
         userAnswers.push({ question: q.text, answer: "Initial no, but resolved with ErgoBot support", tip: q.extraTip, image: q.image, issue: null });
+        saveProgress();
         controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
       } else {
         await askFollowUp(q);
@@ -1203,7 +1245,7 @@ function saveInline(index, updatedAnswer) {
   entry.issue = updatedAnswer.startsWith("No") ? issueText : null;
 
   delete entry._backup; // clear temp state
-
+ saveProgress();
   renderReviewItem(index);
 }
 
@@ -1285,7 +1327,7 @@ function saveUserInfo() {
   }
 
   userInfo = { name, base, job, manager, desk };
-
+saveProgress();
   renderUserInfo();
 }
 
@@ -1447,6 +1489,8 @@ function restartAssessment() {
   if (!confirm("Are you sure you want to restart? All progress will be lost.")) {
     return;
   }
+
+   clearProgress(); 
 
   // Reset all state
   currentQuestion = 0;
@@ -1640,6 +1684,26 @@ document.getElementById("progressHeader").style.display = "none";
       const safeName = (userInfo.name || "ErgoBot").replace(/[^\w\-]+/g, "_");
       return doc.output("blob");
     }
+
+  window.onload = () => {
+  const hasProgress = loadProgress();
+
+  if (hasProgress && userInfo.name) {
+    if (confirm("Resume your previous session?")) {
+      document.getElementById('userInfoForm').style.display = 'none';
+      document.getElementById('chatbox').style.display = 'block';
+
+      document.getElementById("progressContainer").style.display = "block";
+      document.getElementById("progressHeader").style.display = "flex";
+      document.getElementById("restartBtn").style.display = "inline-block";
+
+      showQuestion();
+      return;
+    } else {
+      clearProgress();
+    }
+  }
+};
   </script>
 </body>
 </html>
