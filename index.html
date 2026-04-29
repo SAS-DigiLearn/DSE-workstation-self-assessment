@@ -1354,7 +1354,8 @@ summaryHeader.innerHTML = `
   </div>
 
   <div class="summary-right">
-   <button onclick="downloadZIP()">Download Report</button>
+  <button onclick="downloadZIP()">Download Report</button>
+  <button onclick="startNewAssessment()">Start New Assessment</button>
   </div>
 `;
 
@@ -1511,6 +1512,27 @@ function restartAssessment() {
   document.getElementById('userInfoForm').style.display = 'block';
   document.getElementById("progressContainer").style.display = "none";
 document.getElementById("progressHeader").style.display = "none";
+}
+
+function startNewAssessment() {
+  if (!confirm("Start a new assessment? This will clear the current one.")) {
+    return;
+  }
+
+  clearProgress(); 
+  currentQuestion = 0;
+  currentSection = null;
+  userAnswers = [];
+  userInfo = {};
+
+  messages.innerHTML = '';
+  controls.innerHTML = '';
+
+  document.getElementById('chatbox').style.display = 'none';
+  document.getElementById('userInfoForm').style.display = 'block';
+
+  document.getElementById("progressContainer").style.display = "none";
+  document.getElementById("progressHeader").style.display = "none";
 }
 
     
