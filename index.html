@@ -352,6 +352,7 @@ let userInfo = {};
         text: "Can you find a comfortable keying position? As shown in the first image, you should sit upright and have room to rest your palms or wrists on the desk for support when you are not typing.",
         tip: `Try pushing the screen further back to create more room for the keyboard, hands and wrist. Move the keyboard to allow room to rest your palms or wrists on the desk for support when you are not typing.<p>You might like to use a wrist-rest. Remember to sit upright. You might need to adjust your chair position to help.</p>`,
         image: "comfortable-keying-position.png",
+         alt: "Testing alt",
         yesFeedback: "Good!"
   },
       /*✅✏️ Q4 */
@@ -651,20 +652,22 @@ yesFeedback: "Good to hear!"
       });
     }
 
-    function appendMessage(text, sender, image = null) {
-      const msg = document.createElement('div');
-      msg.className = 'message ' + sender;
-      msg.innerHTML = text;
-      messages.appendChild(msg);
-      if (image) {
-        const img = document.createElement('img');
-        img.src = image;
-        img.alt = "Ergonomics Tip Image";
-        img.className = "tip-image";
-        messages.appendChild(img);
-      }
-      messages.scrollTop = messages.scrollHeight;
-    }
+  function appendMessage(text, sender, q = null) {
+  const msg = document.createElement('div');
+  msg.className = 'message ' + sender;
+  msg.innerHTML = text;
+  messages.appendChild(msg);
+
+  if (q?.image) {
+    const img = document.createElement('img');
+    img.src = q.image;
+    img.alt = q.alt ?? "";
+    img.className = "tip-image";
+    messages.appendChild(img);
+  }
+
+  messages.scrollTop = messages.scrollHeight;
+}
 
     function startAssessment() {
       const nameField = document.getElementById('Name');
@@ -733,7 +736,7 @@ if (sectionColors[section]) {
   headerEl.style.backgroundColor = "#b91e71"; // fallback
 }
 
-   appendMessage(q.text, 'bot', q.image);
+   appendMessage(q.text, 'bot', q);
 
 if (q.freeText) {
   const textarea = document.createElement('textarea');
