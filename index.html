@@ -1496,7 +1496,7 @@ headers.forEach((header) => {
 }
 
 function restartAssessment() {
-  if (!confirm("Are you sure you want to restart? All progress will be lost.")) {
+  if (!confirm("Restart the assessment?\n\nPress OK to restart and lose your progress, or Cancel to continue.")) {
     return;
   }
 
@@ -1720,7 +1720,7 @@ function startNewAssessment() {
   const hasProgress = loadProgress();
 
   if (hasProgress && userInfo.name) {
-    if (confirm("Resume your previous session?")) {
+    if (confirm("Resume your previous session?\n\nPress OK to continue where you left off, or Cancel to start a new session.")) {
       document.getElementById('userInfoForm').style.display = 'none';
       document.getElementById('chatbox').style.display = 'block';
 
